@@ -38,6 +38,7 @@ namespace GraphicalTestApp
                 GetRotation() * (float)(180.0f / Math.PI),
                 GetScale(),
                 Color.WHITE);
+
             base.Draw();
         }
     }
