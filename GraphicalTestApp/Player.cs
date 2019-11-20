@@ -15,6 +15,18 @@ namespace GraphicalTestApp
         private bool _armor = false;
         private bool _iFrames = false;
 
+        private static Player _instance;
+        private AABB _hitbox;
+
+        public static Player Instance
+        {
+            get { return _instance; }
+        }
+
+        public AABB Hitbox
+        {
+            get { return _hitbox; }
+        }
 
         //Stuff
         private Interface _interface;
@@ -35,19 +47,19 @@ namespace GraphicalTestApp
             OnUpdate += StatCount;
             OnUpdate += TouchPlayer;
             //OnUpdate += Touch;
-            AddChild(Hitbox = new AABB(16, 16));
-            //Centers the hitbox
-            Hitbox.X = -7;
-            Hitbox.Y = -7;
+
+            _hitbox = new AABB(16, 16);
+            AddChild(_hitbox);
+            _instance = this;
         }
 
         void TouchPlayer(float deltaTime)
         {
-            if (Hitbox.DetectCollision
-            {
-                _hp = 0;
-                RemoveChild(this);
-            }
+            //if (Hitbox.DetectCollision
+            //{
+            //    _hp = 0;
+            //    RemoveChild(this);
+            //}
 
         }
 
@@ -56,7 +68,7 @@ namespace GraphicalTestApp
         {
             if (Input.IsKeyDown(68) && X < 800)
             {
-                X += 100*deltaTime;
+                X += 90 * deltaTime;
             }
         }
 
@@ -65,7 +77,7 @@ namespace GraphicalTestApp
         {
             if (Input.IsKeyDown(65) && X > 10)
             {
-                X -= 100*deltaTime;
+                X -= 90 * deltaTime;
             }
         }
 
@@ -73,15 +85,15 @@ namespace GraphicalTestApp
         {
             if (Input.IsKeyDown(87) && Y > 10)
             {
-                Y -= 100 *deltaTime;
+                Y -= 90 * deltaTime;
             }
         }
 
         private void MoveDown(float deltaTime)
         {
-            if (Input.IsKeyDown(83) && Y < 7501)
+            if (Input.IsKeyDown(83) && Y < 750)
             {
-                Y += 100*deltaTime;
+                Y += 90 * deltaTime;
             }
 
         }

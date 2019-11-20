@@ -9,8 +9,6 @@ namespace GraphicalTestApp
 
     class Actor
     {
-        protected Actor _parent = null;
-
         public StartEvent OnStart;
         public UpdateEvent OnUpdate;
         public DrawEvent OnDraw;
@@ -19,6 +17,8 @@ namespace GraphicalTestApp
 
         public Actor Parent { get; private set; } = null;
         protected List<Actor> _children = new List<Actor>();
+        private List<Actor> _additions = new List<Actor>();
+        private List<Actor> _removals = new List<Actor>();
 
         private Matrix3 _localTransform = new Matrix3();
         private Matrix3 _globalTransform = new Matrix3();
@@ -85,31 +85,28 @@ namespace GraphicalTestApp
         public void AddChild(Actor child)
         {
             //Make sure the child doesn't already have a parent
-            if (child._parent != null)
+            if (child.Parent != null)
             {
                 return;
             }
             //Assign this Entity as the child's parent
-            child._parent = this;
+            child.Parent = this;
+
+            _additions.Add(child);
             //Add child to collection
-            _children.Add(child);
+            //_children.Add(child);
         }
 
         public void RemoveChild(Actor child)
         {
-            bool isMyChild = _children.Remove(child);
-            if (isMyChild)
-            {
-                child._parent = null;
-                child._localTransform = child._globalTransform;
-            }
+            _removals.Add(child);
         }
 
-            public void UpdateTransform()
+        public void UpdateTransform()
         {
-            if (_parent != null)
+            if (Parent != null)
             {
-                _globalTransform = _parent._globalTransform * _localTransform;
+                _globalTransform = Parent._globalTransform * _localTransform;
             }
             else
             {
@@ -147,12 +144,31 @@ namespace GraphicalTestApp
             //Call this Actor's OnUpdate events
             OnUpdate?.Invoke(deltaTime);
 
+            //Add all the Actors readied for addition
+            foreach (Actor a in _additions)
+            {
+                //Add a to _children
+                _children.Add(a);
+            }
+            //Reset the addition list
+            _additions.Clear();
+
+            //Remove all the Actors readied for removal
+            foreach (Actor a in _removals)
+            {
+                //Add a to _children
+                _children.Remove(a);
+            }
+            //Reset the removal list
+            _removals.Clear();
+
             //Update all of this Actor's children
             foreach (Actor child in _children)
             {
                 child.Update(deltaTime);
             }
         }
+
 
         //Call the OnDraw events of the Actor and its children
         public virtual void Draw()

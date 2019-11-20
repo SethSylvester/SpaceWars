@@ -13,32 +13,32 @@ namespace GraphicalTestApp
         //Returns the Y coordinate at the top of the box
         public float Top
         {
-            get { return YAbsolute; }
+            get { return YAbsolute - Height / 2; }
         }
 
         //Returns the Y coordinate at the top of the box
         public float Bottom
         {
-            get { return YAbsolute + Height; }
+            get { return YAbsolute + Height / 2; }
         }
 
         //Returns the X coordinate at the top of the box
         public float Left
         {
-            get { return XAbsolute; }
+            get { return XAbsolute - Width / 2; }
         }
 
         //Returns the X coordinate at the top of the box
         public float Right
         {
-            get { return XAbsolute + Width; }
+            get { return XAbsolute + Width / 2; }
         }
 
         public bool DetectCollision(AABB other)
         {
             // test for not overlapped as it exits faster
-            return !(_max.x < other._min.x || _max.y < other._min.y ||
-            _min.x > other._max.x || _min.y > other._max.y);
+            return !(Right < other.Left || Top < other.Bottom ||
+            Left > Right || Bottom > other.Top);
         }
 
         public bool DetectCollision(Vector3 point)
@@ -51,8 +51,9 @@ namespace GraphicalTestApp
         //Draw the bounding box to the screen
         public override void Draw()
         {
-            Raylib.Rectangle rec = new Raylib.Rectangle(XAbsolute, YAbsolute, Width, Height);
-            Raylib.Raylib.DrawRectangleLinesEx(rec, 1, Raylib.Color.RED);
+            Raylib.Rectangle rec = new Raylib.Rectangle(Left, Top, Width, Height);
+            Raylib.Raylib.DrawRectangleLinesEx(rec, 5, Raylib.Color.RED);
+            base.Draw();
         }
 
         private Vector3 _min = new Vector3(
@@ -147,15 +148,6 @@ namespace GraphicalTestApp
             // test for not overlapped as it exits faster
             return !(_max.x < other._min.x || _max.y < other._min.y ||
             _min.x > other._max.x || _min.y > other._max.y);
-        }
-
-        public void Draw(Color color)
-        {
-            float posX = _min.x;
-            float posY = _min.y ; //+ Game.UnitSize.y / 2;
-            float width = (_max.x - _min.x);
-            float height = (_max.y - _min.y);
-            RL.DrawRectangleLines((int)posX, (int)posY, (int)width, (int)height, color);
         }
 
     }

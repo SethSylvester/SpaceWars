@@ -16,9 +16,10 @@ namespace GraphicalTestApp
 
         public Enemy()
         {
-            OnUpdate += Move;
-
+            //OnUpdate += Move;
         }
+
+
 
         private void Move(float deltaTime)
         {

@@ -23,33 +23,36 @@ namespace GraphicalTestApp
         {
             Projectile projectile = new Projectile(false);
             _root.AddChild(projectile);
+            Sprite projectileSprite = new Sprite("GFX/Coin.png");
+            projectile.AddChild(projectileSprite);
             projectile.X = _x + 100;
             projectile.Y = _y;
             OnShoot?.Invoke();
         }
 
-        /*
-        public void Shoot(String type, Direction _direction, float _x, float _y)
+        //Handles bullets with aX velocity
+        public void Shoot(float x, float y, float rotation)
         {
-            _facing = _direction;
-            if (type == "metal")
-            {
-                Projectile projectile = new Projectile("GFX/MoltenGold.png", _facing, true);
-                Game.CurrentScene.AddEntity(projectile);
-                projectile.X = _x;
-                projectile.Y = _y;
-                OnShoot?.Invoke();
-            }
-            else
-            {
-                Projectile projectile = new Projectile("GFX/Coin.png", _facing, false);
-                Game.CurrentScene.AddEntity(projectile);
-                projectile.X = _x;
-                projectile.Y = _y;
-                OnShoot?.Invoke();
-            }
+            Projectile projectile = new Projectile(false);
+            _root.AddChild(projectile);
+            Sprite projectileSprite = new Sprite("GFX/Coin.png");
+            projectile.AddChild(projectileSprite);
+            projectile.X = x + 100;
+            projectile.Y = y;
+            projectile.Rotation = rotation*60;
+            OnShoot?.Invoke();
         }
-        */
+
+        //Handles the beam
+        public void ShootBeam(float _x, float _y, float _z, Actor tParent)
+        {
+            Projectile projectile = new Projectile(false, tParent);
+            _root.AddChild(projectile);
+            Sprite projectileSprite = new Sprite("GFX/Coin.png");
+            projectile.AddChild(projectileSprite);
+            OnShoot?.Invoke();
+        }
+
     }
 
 }
