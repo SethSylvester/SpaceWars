@@ -23,7 +23,6 @@ namespace GraphicalTestApp
         private Matrix3 _localTransform = new Matrix3();
         private Matrix3 _globalTransform = new Matrix3();
 
-
         public float X
         {
             get

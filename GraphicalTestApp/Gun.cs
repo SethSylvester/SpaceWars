@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace GraphicalTestApp
 {
-    public delegate void ShootFuncs();
 
     class Gun
     {
+        //Actor for the root of the scene
         private Actor _root;
 
-        public Projectile projectile;
-        public ShootFuncs OnShoot;
+        //Gun constructor
         public Gun(Actor actor)
         {
             _root = actor;
         }
 
+        //Fires bullets straight downwards
         public void Shoot(float _x, float _y)
         {
             Projectile projectile = new Projectile(false);
@@ -27,10 +27,9 @@ namespace GraphicalTestApp
             projectile.AddChild(projectileSprite);
             projectile.X = _x + 100;
             projectile.Y = _y;
-            OnShoot?.Invoke();
         }
 
-        //Handles bullets with aX velocity
+        //Handles bullets with an X velocity
         public void Shoot(float x, float y, float rotation)
         {
             Projectile projectile = new Projectile(false);
@@ -40,17 +39,27 @@ namespace GraphicalTestApp
             projectile.X = x + 100;
             projectile.Y = y;
             projectile.Rotation = rotation*60;
-            OnShoot?.Invoke();
+        }
+
+        //Shoots bullets upwards
+        public void Shoot(float x, float y, float rotation, byte direction)
+        {
+            Projectile projectile = new Projectile(false, 0);
+            _root.AddChild(projectile);
+            Sprite projectileSprite = new Sprite("GFX/Coin.png");
+            projectile.AddChild(projectileSprite);
+            projectile.X = x + 100;
+            projectile.Y = y;
+            projectile.Rotation = rotation*60;
         }
 
         //Handles the beam
-        public void ShootBeam(float _x, float _y, float _z, Actor tParent)
+        public void ShootBeam(float _x, float _y, float rotation, Actor tParent)
         {
             Projectile projectile = new Projectile(false, tParent);
             _root.AddChild(projectile);
             Sprite projectileSprite = new Sprite("GFX/Coin.png");
             projectile.AddChild(projectileSprite);
-            OnShoot?.Invoke();
         }
 
     }

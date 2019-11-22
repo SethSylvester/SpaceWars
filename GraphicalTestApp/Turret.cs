@@ -195,7 +195,6 @@ namespace GraphicalTestApp
             }
         }
 
-
         private void FireGunBeam(float deltaTime)
         {
             //RL.DrawText(Convert.ToString(_rotation), 800, 355, 25, Color.WHITE);

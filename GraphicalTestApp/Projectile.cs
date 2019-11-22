@@ -10,119 +10,190 @@ namespace GraphicalTestApp
 {
     class Projectile : Entity
     {
-        Timer beamTime = new Timer();
-        int i = 0;
-        int x = 0;
+        //###Beam Stuff###
+        //timer used for beams
+        private Timer _beamTime = new Timer();
+
+        //Sets custom BeamWidth and BeamHeight
+        int _beamWidth = 16;
+        int _beamHeight = 650;
+
+        //Variables for the height of beams
+        int _currentBeamHeight = 0;
+        int _currentBeamHeightShrinker = 0;
         float incrementer = 0;
 
+        //###General Projectile stuff###
+        //1 = north, 2 = south
+        int _direction = 2;
+
+        //Rotation float.
         public float Rotation = 0;
 
-        private float _speed = 85f;
-        private float Speed {
-            get
-            {
-                return _speed;
-            }
-            set
-            { if (_speed > 85f)
-                {
-                    _speed = 85f;
-                }
-            }
-        }
+        //Projectile speed
+        private float _speed = 150f;
 
-
+        //Determines if the projectile is friendly, so the player can't own themselves
         private bool _friendly = false;
 
-        public Projectile(bool friend)
+        //###Constructors###
+        //Basic constructor to lessen the codes load
+        public Projectile()
         {
-            _friendly = friend;
-            //_facing = direction;
-            OnUpdate += MoveDown;
-            OnUpdate += TouchPlayer;
+            //Gives the projectile a hitbox
             AddChild(Hitbox = new AABB(16, 16));
+            OnUpdate += TouchPlayer;
         }
+
+        //Basic projectile, moves downwards
+        public Projectile(bool friend) : this()
+        {
+            //Checks to see if the projectile is friendly and thus will not damage the player
+            _friendly = friend;
+            OnUpdate += MoveDown;
+        }
+
+        //Basic projectile that moves up, the byte identifies it as such
+        public Projectile(bool friend, byte z) : this()
+        {
+            //Checks to see if the projectile is friendly and thus will not damage the player
+            _friendly = friend;
+            OnUpdate += MoveUp;
+        }
+
+        //Basic Beam constructor
         public Projectile(bool friend, Actor tParent)
         {
+            //Checks to see if the beam is friendly and thus will not damage the player
             _friendly = friend;
-            //_facing = direction;
+            //Checks to see if the beam is touching the player
             OnUpdate += TouchPlayer;
+            //Gives the beam a parent
             Beam(tParent);
+            //Starts the time checker function to make sure the beam has proper timing
+            //Which means that it is growing and shrinking at an appropriate rate
             OnUpdate += TimeChecker;
+        }
+
+        //Custom parameter beam constructor
+        public Projectile(bool friend, Actor tParent, int height, int width, int direction)
+        {
+            //###Custom beam parameters###
+            //Which way the beam is firing
+            _direction = direction;
+            //The beams height and width
+            _beamHeight = height;
+            _beamWidth = width;
+
+            //Checks to see if the beam is friendly and thus will not damage the player
+            _friendly = friend;
+            //Checks to see if the beam is touching the player
+            OnUpdate += TouchPlayer;
+            //Gives the beam a parent
+            Beam(tParent);
+            //Starts the time checker function to make sure the beam has proper timing
+            //Which means that it is growing and shrinking at an appropriate rate
+            OnUpdate += TimeChecker;
+        }
+        private void Beam(Actor tParent)
+        {
+            //Shoots the beam from its parent and keeps it anchored cuz its a beam
+            tParent.AddChild(this);
+            //Stops the beam from moving
+            _speed = 0;
         }
 
         void TimeChecker(float deltaTime)
         {
-            if (beamTime.Seconds >= 0.005f && i < 650)
+            //Beam appears
+            if (_beamTime.Seconds >= 0.003f && _currentBeamHeight < _beamHeight && _direction == 1)
             {
-                BeamFire();
+                //Tells the beam to fire up
+                BeamFireUp();
             }
-            else if (beamTime.Seconds >= 0.005f && i == 650)
+            else if (_beamTime.Seconds >= 0.003f && _currentBeamHeight < _beamHeight && _direction == 2)
             {
-                BeamDisappear();
+                //Tells the beam to fire down
+                BeamFireDown();
+            }
+
+            //Beam disappears
+            else if (_beamTime.Seconds >= 0.005f && _currentBeamHeight == _beamHeight && _direction == 1)
+            {
+                //Tells the beam to disappear if it was fired upwards
+                BeamDisappearUp();
+            }
+            else if (_beamTime.Seconds >= 0.005f && _currentBeamHeight == _beamHeight && _direction == 2)
+            {
+                //Tells the beam to disappear if it was fired downwards
+                BeamDisappearDown();
             }
         }
 
-        void BeamFire()
+        //Currently unchanged code
+        void BeamFireUp()
         {
-            beamTime.Restart();
+            _beamTime.Restart();
             if (Hitbox != null)
             {
                 RemoveChild(Hitbox);
             }
-            AddChild(Hitbox = new AABB(16, i));
-            Hitbox.Y = i/2;
-            i++;
-            x = i;
+            AddChild(Hitbox = new AABB(_beamWidth, _currentBeamHeight));
+            Hitbox.Y = -_currentBeamHeight/2;
+            _currentBeamHeight++;
+            _currentBeamHeightShrinker = _currentBeamHeight;
         }
 
-        void BeamDisappear()
+        void BeamFireDown()
         {
-            beamTime.Restart();
+            _beamTime.Restart();
             if (Hitbox != null)
             {
                 RemoveChild(Hitbox);
             }
-            AddChild(Hitbox = new AABB(16, x));
-            Hitbox.Y = incrementer + x/2;
+            AddChild(Hitbox = new AABB(_beamWidth, _currentBeamHeight));
+            Hitbox.Y = _currentBeamHeight/2;
+            _currentBeamHeight++;
+            _currentBeamHeightShrinker = _currentBeamHeight;
+        }
+
+        void BeamDisappearUp()
+        {
+            _beamTime.Restart();
+            if (Hitbox != null)
+            {
+                RemoveChild(Hitbox);
+            }
+            AddChild(Hitbox = new AABB(_beamWidth, _currentBeamHeightShrinker));
+            Hitbox.Y = incrementer/2 - _currentBeamHeight/2;
             incrementer++;
-            x--;
-            if (x == 0)
+            _currentBeamHeightShrinker--;
+            if (_currentBeamHeightShrinker == 0)
             {
-                i = 0;
+                _currentBeamHeight = 0;
                 incrementer = 0;
                 Parent.RemoveChild(this);
             }
         }
 
-        private void Beam(Actor tParent)
+        void BeamDisappearDown()
         {
-            tParent.AddChild(this);
-            Speed = 0;
-        }
-
-
-
-        /*private Direction _facing;
-        private void Move(float deltaTime)
-        {
-            switch (_facing)
+            _beamTime.Restart();
+            if (Hitbox != null)
             {
-                case Direction.North:
-                    MoveUp();
-                    break;
-                case Direction.South:
-                    MoveDown();
-                    break;
-                case Direction.East:
-                    MoveRight();
-                    break;
-                case Direction.West:
-                    MoveLeft();
-                    break;
+                RemoveChild(Hitbox);
+            }
+            AddChild(Hitbox = new AABB(_beamWidth, _currentBeamHeightShrinker));
+            Hitbox.Y = incrementer + _currentBeamHeightShrinker/2;
+            incrementer++;
+            _currentBeamHeightShrinker--;
+            if (_currentBeamHeightShrinker == 0)
+            {
+                _currentBeamHeight = 0;
+                incrementer = 0;
+                Parent.RemoveChild(this);
             }
         }
-        */
 
         private void TouchPlayer(float deltaTime)
         {
@@ -135,50 +206,44 @@ namespace GraphicalTestApp
             {
                 RemoveChild(this);
             }
-            //List<Entity> touched = GetEntities(X, Y);
-
-            //foreach (Entity e in touched)
-            //{
-            //    if (e is Player)
-            //    {
-            //        CurrentScene.RemoveEntity(this);
-            //        ((Player)e).TakeDamage();
-            //        break;
-            //    }
-            //}
 
         }
 
 
-        //Move Directions
+        //###Movement Directions###
         private void MoveUp(float deltaTime)
         {
-            YVelocity = -Speed * deltaTime;
+            YVelocity = -_speed * deltaTime;
+            XVelocity = Rotation * deltaTime;
+
+            if (Y < 0 || Y > 750 || X <= 0 || X >= 800)
+            {
+                Parent.RemoveChild(this);
+            }
+
         }
 
         private void MoveDown(float deltaTime)
         {
-            YVelocity = +Speed * deltaTime;
+            YVelocity = +_speed * deltaTime;
             XVelocity = Rotation * deltaTime;
 
 
-            if (Y > 750 || X <= 0 || X >= 800)
+            if (Y < 0 || Y > 750 || X <= 0 || X >= 800)
             {
                 Parent.RemoveChild(this);
             }
         }
 
-
+        
         private void MoveLeft(float deltaTime)
         {
-            XVelocity = -Speed * deltaTime;
-
+            XVelocity = -_speed * deltaTime;
         }
 
         private void MoveRight(float deltaTime)
         {
-            XVelocity = +Speed * deltaTime;
-
+            XVelocity = +_speed * deltaTime;
         }
 
     }

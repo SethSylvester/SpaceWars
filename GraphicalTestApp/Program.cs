@@ -20,7 +20,7 @@ namespace GraphicalTestApp
 
             //player items
             Sprite toga = new Sprite("GFX/Toga.png");
-            Player _player = new Player(_interface);
+            Player _player = new Player(_interface, root);
 
             //Adds the players sprite and adds the player to the scene
             _player.AddChild(toga);

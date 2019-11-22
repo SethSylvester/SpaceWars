@@ -15,28 +15,50 @@ namespace GraphicalTestApp
         private bool _armor = false;
         private bool _iFrames = false;
 
+        //lets the player shoot
+        private Gun _playerGun;
+        private bool _canShoot = true;
+        //The players speed
+        private float Speed { get; set; } = 85f;
+
+        //Armor Property
+        public bool Armor
+        {
+            get
+            {
+                return _armor;
+
+            }
+        }
+
+        //Instances the player and their hitbox
         private static Player _instance;
         private AABB _hitbox;
+
+        private Timer _shootTimer = new Timer();
 
         public static Player Instance
         {
             get { return _instance; }
         }
 
-        public AABB Hitbox
-        {
-            get { return _hitbox; }
-        }
-
         //Stuff
         private Interface _interface;
 
-        //###Constructors###
-
+        //###Constructor###
         //Allows a custom icon to be used
-        public Player(Interface _inter)
+        public Player(Interface _inter, Actor actor)
         {
+            //Gives the player an interface
             _interface = _inter;
+
+            //Gives the player a Hitbox
+            _hitbox = new AABB(16, 16);
+            AddChild(_hitbox);
+            _instance = this;
+
+            //Gives the player a gun
+            _playerGun = new Gun(actor);
 
             //Reads the keys every frame
             OnUpdate += MoveUp;
@@ -45,12 +67,39 @@ namespace GraphicalTestApp
             OnUpdate += MoveRight;
             //Updates the interface
             OnUpdate += StatCount;
+            //Checks to see if touched
             OnUpdate += TouchPlayer;
             //OnUpdate += Touch;
+            OnUpdate += Shoot;
+        }
 
-            _hitbox = new AABB(16, 16);
-            AddChild(_hitbox);
-            _instance = this;
+        //The shooting function
+        private void Shoot(float deltaTime)
+        {
+            //Gives a small delay between shots as to not spam
+            if (_shootTimer.Seconds >= 0.25f)
+            {
+                _canShoot = true;
+                _shootTimer.Restart();
+            }
+
+            //Angles the bullets a little bit infront of the plane so you don't clip
+            if (Input.IsKeyDown(32) && Input.IsKeyDown(87) && _canShoot)
+            {
+                _playerGun.Shoot(X - 100, Y - 20, 0, 1);
+                _playerGun.Shoot(X - 100, Y - 20, -0.25f, 1);
+                _playerGun.Shoot(X - 100, Y - 20, 0.25f, 1);
+                _canShoot = false;
+            }
+
+            //Normal shoot function
+            else if (Input.IsKeyDown(32) && _canShoot)
+            {
+            _playerGun.Shoot(X - 100, Y - 10, 0, 1);
+            _playerGun.Shoot(X - 100, Y - 10, -0.25f, 1);
+            _playerGun.Shoot(X - 100, Y - 10, 0.25f, 1);
+                _canShoot = false;
+            }
         }
 
         void TouchPlayer(float deltaTime)
@@ -66,18 +115,20 @@ namespace GraphicalTestApp
         //Moves right one space
         private void MoveRight(float deltaTime)
         {
+            //Checks to make sure D is pressed & not OOB
             if (Input.IsKeyDown(68) && X < 800)
             {
-                X += 90 * deltaTime;
+                X += Speed * deltaTime;
             }
         }
 
         //character moves left
         private void MoveLeft(float deltaTime)
         {
+            //Checks to make sure A is pressed & not OOB
             if (Input.IsKeyDown(65) && X > 10)
             {
-                X -= 90 * deltaTime;
+                X -= Speed * deltaTime;
             }
         }
 
@@ -85,7 +136,7 @@ namespace GraphicalTestApp
         {
             if (Input.IsKeyDown(87) && Y > 10)
             {
-                Y -= 90 * deltaTime;
+                Y -= Speed * deltaTime;
             }
         }
 
@@ -93,14 +144,17 @@ namespace GraphicalTestApp
         {
             if (Input.IsKeyDown(83) && Y < 750)
             {
-                Y += 90 * deltaTime;
+                Y += Speed * deltaTime;
             }
 
         }
 
+        //###INTERFACE STUFF###
+
         //Tells the interface what to write for the stats
         private void StatCount(float deltaTime)
         {
+            //Sends the HP number to the interface
             _interface.SetHP(_hp);
             if (Parent != null)
             {
@@ -110,6 +164,7 @@ namespace GraphicalTestApp
             {
                 RemoveChild(this);
             }
+            //Sends the coins number to the interface
             _interface.SetCoins(_coins);
         }
 
@@ -145,6 +200,8 @@ namespace GraphicalTestApp
         //    }
         //}
 
+
+            //IFrames function, need to replace system.timers with the timer class
         public void IFrames()
         {
             _iFrames = true;
@@ -152,13 +209,15 @@ namespace GraphicalTestApp
             IFTimer.Elapsed += new ElapsedEventHandler(IFramesOver);
             IFTimer.Interval = 500; IFTimer.Enabled = true;
         }
+
+        //ends the Iframes
         private void IFramesOver(object source, ElapsedEventArgs e)
         {
             //Todo: Put animations in here
             _iFrames = false;
         }
 
-
+        //Instantly kills the player if they don't have armor
         public void Die()
         {
             if (_armor)
@@ -173,18 +232,5 @@ namespace GraphicalTestApp
             }
         }
 
-        public bool GetArmor()
-        {
-            return _armor;
-        }
-
-        public bool Armor
-        {
-            get
-            {
-                return _armor;
-
-            }
-        }
     }
 }
