@@ -14,81 +14,46 @@ namespace GraphicalTestApp
     {
         private Actor _root;
         Gun gun;
-        private bool _canShoot = true;
-        private bool _canShootShot = true;
-        private bool _canShootBeam = true;
-        private int _shootTime = 200;
-        private int _shootShotTime = 700;
-        private int _beamTime = 8500;
+
         //Rotation
         private bool _rotateLeft = true;
         private bool _wiggleLeft = true;
         public float _rotation { get; set; }
+
+        private Timer _timer = new Timer();
 
         //Gun turret Constructor
         public Turret(Actor actor)
         {
             _root = actor;
             gun = new Gun(_root);
-            TStartShot();
             OnUpdate += Shotgun;
-
-            //AddChild(Hitbox = new AABB(75, 70));
         }
 
         //Rotating turret constructor
-        public Turret(Actor actor, bool b)
+        public Turret(Actor actor, string type)
         {
             _root = actor;
             gun = new Gun(_root);
-            TStart();
-            OnUpdate += FireGun;
-            if (b)
+            if (type == "rotate")
             {
                 OnUpdate += TurretRotation;
+                OnUpdate += FireGun;
             }
-            else
+            else if (type == "wiggle")
             {
                 OnUpdate += TurretWiggle;
+                OnUpdate += FireGun;
             }
-            //Solid = true;
-        }
+            else if (type == "beam")
+            {
+                OnUpdate += FireGunBeam;
+            }
+            else if (type == "reverse")
+            {
+                OnUpdate += FireGunReverse;
+            }
 
-        //Beam turret constructor
-        public Turret(Actor actor, int z)
-        {
-            _root = actor;
-            gun = new Gun(_root);
-            TStartBeam();
-            OnUpdate += FireGunBeam;
-            //Solid = true;
-        }
-
-        //Starts the beam turret, will be deleted later
-        private void TStartBeam()
-        {
-            //timer for allowing the gun to shoot
-            System.Timers.Timer shootTime = new System.Timers.Timer();
-            shootTime.Elapsed += FireBoolBeam;
-            shootTime.Interval = _beamTime;
-            shootTime.Enabled = true;
-        }
-
-        private void TStart()
-        {
-            //timer for allowing the gun to shoot
-            System.Timers.Timer shootTime = new System.Timers.Timer();
-            shootTime.Elapsed += FireBool;
-            shootTime.Interval = _shootTime;
-            shootTime.Enabled = true;
-        }
-        private void TStartShot()
-        {
-            //timer for allowing the gun to shoot
-            System.Timers.Timer shootTime = new System.Timers.Timer();
-            shootTime.Elapsed += FireBoolShot;
-            shootTime.Interval = _shootShotTime;
-            shootTime.Enabled = true;
         }
 
         private void TurretRotation(float deltaTime)
@@ -170,12 +135,11 @@ namespace GraphicalTestApp
         private void Shotgun(float deltaTime)
         {
             //checks if canshoot aka the timer is done.
-            if (_canShootShot)
+            if (_timer.Seconds >= 0.7f)
             {
+                _timer.Restart();
                 //shoot function
                 gun.Shoot(XAbsolute - 100, YAbsolute + 30, _rotation * -1f);
-                //sets canshoot to false to prevent spamming
-                _canShootShot = false;
             }
 
         }
@@ -186,12 +150,59 @@ namespace GraphicalTestApp
             //RL.DrawText(Convert.ToString(_rotation), 800, 355, 25, Color.WHITE);
 
             //checks if canshoot aka the timer is done.
-            if (_canShoot)
+            if (_timer.Seconds >= 0.2f)
             {
+                _timer.Restart();
                 //shoot function
                 gun.Shoot(XAbsolute - 100, YAbsolute + 30, _rotation*-1f);
-                //sets canshoot to false to prevent spamming
-                _canShoot = false;
+            }
+        }
+
+        private void FireGunReverse(float deltaTime)
+        {
+            //RL.DrawText(Convert.ToString(_rotation), 800, 355, 25, Color.WHITE);
+
+            //checks if canshoot aka the timer is done.
+            if (_timer.Seconds >= 0.2f)
+            {
+                _timer.Restart();
+                //shoot function
+                //Down Shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i, "reverse");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "reverse");
+                }
+                //up shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i, "reverseUp");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "reverseUp");
+                }
+                //Left Shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i, "reverseLeft");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "reverseLeft");
+                }
+                //Right Shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i, "reverseRight");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "reverseRight");
+                }
             }
         }
 
@@ -200,29 +211,12 @@ namespace GraphicalTestApp
             //RL.DrawText(Convert.ToString(_rotation), 800, 355, 25, Color.WHITE);
 
             //checks if canshoot aka the timer is done.
-            if (_canShootBeam)
+            if (_timer.Seconds >= 8.5f)
             {
+                _timer.Restart();
                 //shoot function
                 gun.ShootBeam(XAbsolute - 100 + (_rotation*-1f), YAbsolute + 30, _rotation*-1f, this);
-                //sets canshoot to false to prevent spamming
-                _canShootBeam = false;
             }
-        }
-
-        //sets the timer to true to let the gun fire
-        private void FireBool(object source, ElapsedEventArgs e)
-        {
-            _canShoot = true;
-        }
-        //sets the timer to true to let the gun fire
-        private void FireBoolShot(object source, ElapsedEventArgs e)
-        {
-            _canShootShot = true;
-        }
-
-        private void FireBoolBeam(object source, ElapsedEventArgs e)
-        {
-            _canShootBeam = true;
         }
 
     }

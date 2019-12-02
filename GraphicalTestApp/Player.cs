@@ -14,6 +14,7 @@ namespace GraphicalTestApp
         private int _coins = 0;
         private bool _armor = false;
         private bool _iFrames = false;
+        private Timer _iframesTimer = new Timer();
 
         //lets the player shoot
         private Gun _playerGun;
@@ -34,6 +35,11 @@ namespace GraphicalTestApp
         //Instances the player and their hitbox
         private static Player _instance;
         private AABB _hitbox;
+
+        public AABB HitBox
+        {
+            get { return _hitbox; }
+        }
 
         private Timer _shootTimer = new Timer();
 
@@ -68,7 +74,7 @@ namespace GraphicalTestApp
             //Updates the interface
             OnUpdate += StatCount;
             //Checks to see if touched
-            OnUpdate += TouchPlayer;
+            OnUpdate += Touch;
             //OnUpdate += Touch;
             OnUpdate += Shoot;
         }
@@ -86,35 +92,34 @@ namespace GraphicalTestApp
             //Angles the bullets a little bit infront of the plane so you don't clip
             if (Input.IsKeyDown(32) && Input.IsKeyDown(87) && _canShoot)
             {
-                _playerGun.Shoot(X - 100, Y - 20, 0, 1);
-                _playerGun.Shoot(X - 100, Y - 20, -0.25f, 1);
-                _playerGun.Shoot(X - 100, Y - 20, 0.25f, 1);
+                _playerGun.Shoot(X - 100, Y - 20, 0, "playerUp");
+                _playerGun.Shoot(X - 100, Y - 20, -0.25f, "playerUp");
+                _playerGun.Shoot(X - 100, Y - 20, 0.25f, "playerUp");
                 _canShoot = false;
             }
 
             //Normal shoot function
             else if (Input.IsKeyDown(32) && _canShoot)
             {
-            _playerGun.Shoot(X - 100, Y - 10, 0, 1);
-            _playerGun.Shoot(X - 100, Y - 10, -0.25f, 1);
-            _playerGun.Shoot(X - 100, Y - 10, 0.25f, 1);
+            _playerGun.Shoot(X - 100, Y - 10, 0, "playerUp");
+            _playerGun.Shoot(X - 100, Y - 10, -0.25f, "playerUp");
+            _playerGun.Shoot(X - 100, Y - 10, 0.25f, "playerUp");
                 _canShoot = false;
             }
         }
 
-        void TouchPlayer(float deltaTime)
+        void Touch(float deltaTime)
         {
-            //if (Hitbox.DetectCollision
-            //{
-            //    _hp = 0;
-            //    RemoveChild(this);
-            //}
+            if (_iframesTimer.Seconds >= 0.5f)
+            {
+                _iFrames = false;
+            }
 
         }
 
         //Moves right one space
         private void MoveRight(float deltaTime)
-        {
+        { 
             //Checks to make sure D is pressed & not OOB
             if (Input.IsKeyDown(68) && X < 800)
             {
@@ -184,6 +189,10 @@ namespace GraphicalTestApp
                 if (!_armor)
                 {
                     _hp--;
+                    if (_hp <= 0)
+                    {
+                        Die();
+                    }
                 }
                 else
                 {
@@ -205,31 +214,17 @@ namespace GraphicalTestApp
         public void IFrames()
         {
             _iFrames = true;
-            System.Timers.Timer IFTimer = new System.Timers.Timer();
-            IFTimer.Elapsed += new ElapsedEventHandler(IFramesOver);
-            IFTimer.Interval = 500; IFTimer.Enabled = true;
+            _iframesTimer.Restart();
         }
 
-        //ends the Iframes
-        private void IFramesOver(object source, ElapsedEventArgs e)
-        {
-            //Todo: Put animations in here
-            _iFrames = false;
-        }
-
-        //Instantly kills the player if they don't have armor
+        //Instantly kills the player
         public void Die()
         {
-            if (_armor)
-            {
-                IFrames();
-                _armor = false;
-            }
-            else
-            {
-                //Todo: Add animation
-                _hp = 0;
-            }
+            //Todo: Add animation
+            _hp = 0;
+            StatCount(0f);
+            RemoveChild(_hitbox);
+            Parent.RemoveChild(this);
         }
 
     }

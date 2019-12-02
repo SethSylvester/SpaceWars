@@ -39,6 +39,12 @@ namespace GraphicalTestApp
             //Armor/Shields
             RL.DrawText(Convert.ToString("Armor: " + _armor), 1000, 355, 25, Color.WHITE);
             RL.DrawRectangleLines(810, 0, 1, 1200, Raylib.Color.WHITE);
+
+            if (Enemy.Instance.HP <= 0)
+            {
+                RL.DrawText("You win!", 300, 20, 45, Color.GOLD);
+            }
+
         }
 
         public void SetHP(int hp)

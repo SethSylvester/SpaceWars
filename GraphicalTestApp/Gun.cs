@@ -32,34 +32,95 @@ namespace GraphicalTestApp
         //Handles bullets with an X velocity
         public void Shoot(float x, float y, float rotation)
         {
-            Projectile projectile = new Projectile(false);
-            _root.AddChild(projectile);
-            Sprite projectileSprite = new Sprite("GFX/Coin.png");
-            projectile.AddChild(projectileSprite);
-            projectile.X = x + 100;
-            projectile.Y = y;
-            projectile.Rotation = rotation*60;
+            if ( BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false);
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
         }
 
         //Shoots bullets upwards
-        public void Shoot(float x, float y, float rotation, byte direction)
+        public void Shoot(float x, float y, float rotation, string type)
         {
-            Projectile projectile = new Projectile(false, 0);
-            _root.AddChild(projectile);
-            Sprite projectileSprite = new Sprite("GFX/Coin.png");
-            projectile.AddChild(projectileSprite);
-            projectile.X = x + 100;
-            projectile.Y = y;
-            projectile.Rotation = rotation*60;
+            if (type == "up" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, "up");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
+
+            else if (type == "playerUp" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(true, "up");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
+
+            else if (type == "reverse" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, "reverse");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
+            else if (type == "reverseRight" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, "reverseRight");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
+            else if (type == "reverseLeft" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, "reverseLeft");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
+            else if (type == "reverseUp" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, "reverseUp");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
         }
 
         //Handles the beam
         public void ShootBeam(float _x, float _y, float rotation, Actor tParent)
         {
-            Projectile projectile = new Projectile(false, tParent);
-            _root.AddChild(projectile);
-            Sprite projectileSprite = new Sprite("GFX/Coin.png");
-            projectile.AddChild(projectileSprite);
+            if (BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, tParent);
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("");
+                projectile.AddChild(projectileSprite);
+            }
         }
 
     }

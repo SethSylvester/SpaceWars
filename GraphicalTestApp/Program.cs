@@ -17,6 +17,12 @@ namespace GraphicalTestApp
 
             //the interface
             Interface _interface = new Interface();
+            //Adds the interface
+            root.AddChild(_interface);
+
+            BossFightController level = new BossFightController(root);
+
+            root.AddChild(level);
 
             //player items
             Sprite toga = new Sprite("GFX/Toga.png");
@@ -30,25 +36,27 @@ namespace GraphicalTestApp
             _player.X = 100;
             _player.Y = 500;
 
-            //Adds the interface
-            root.AddChild(_interface);
+            level.StartUp();
 
-            //The boss's thicc sprite
-            Enemy enemyCenter = new Enemy();
-            root.AddChild(enemyCenter);
-            Sprite enemyCenterSprite = new Sprite("GFX/Boss.png");
-            enemyCenter.AddChild(enemyCenterSprite);
-            enemyCenter.X = 400;
-            enemyCenter.Y = 100;
+            //Phase1();
 
-            //Attaching things to this lets them orbit the boss
-            Spinner spinner = new Spinner();
-            enemyCenter.AddChild(spinner);
+            //void Phase1()
+           // {
+                          //EnemyBossSpawn();
 
-            Phase1();
+                //SpawnRotatingTurret(-105, 0);
+                //SpawnRotatingTurret(-175, 0);
+                //SpawnRotatingTurret(-245, 0);
+                //SpawnRotatingTurret(-315, 0);
 
-            void Phase1()
-            {
+                //SpawnRotatingTurret(105, 0);
+                //SpawnRotatingTurret(175, 0);
+                //SpawnRotatingTurret(245, 0);
+                //SpawnRotatingTurret(315, 0);
+
+
+                //Angry();
+                /*
                 //Left Turrets
                 SpawnWiggleGunTurret(-105,0);
                 SpawnWiggleGunTurret(-175,0);
@@ -63,6 +71,50 @@ namespace GraphicalTestApp
 
                 //Center Shotgun
                 SpawnShotgun(0, 0);
+                */
+            //}
+
+            /*
+            void AngrySpin()
+            {
+                Spinner test = new Spinner("fast");
+                Projectile proj = new Projectile();
+                Projectile proj1 = new Projectile();
+                Projectile proj2 = new Projectile();
+                Projectile proj3 = new Projectile();
+                Projectile proj4 = new Projectile();
+                root.AddChild(test);
+                test.X = 500;
+                test.Y = 500;
+                test.AddChild(proj);
+                test.AddChild(proj1);
+                test.AddChild(proj2);
+                test.AddChild(proj3);
+                test.AddChild(proj4);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                Sprite projectileSprite3 = new Sprite("GFX/Coin.png");
+                Sprite projectileSprite2 = new Sprite("GFX/Coin.png");
+                Sprite projectileSprite4 = new Sprite("GFX/Coin.png");
+                Sprite projectileSprite5 = new Sprite("GFX/Coin.png");
+                Sprite projectileSprite6 = new Sprite("GFX/Coin.png");
+                proj.AddChild(projectileSprite);
+                proj1.AddChild(projectileSprite3);
+                proj2.AddChild(projectileSprite4);
+                proj3.AddChild(projectileSprite2);
+                proj4.AddChild(projectileSprite5);
+                test.AddChild(projectileSprite6);
+                proj.X = 10;
+                proj1.X = 20;
+                proj2.X = 30;
+                proj3.X = -10;
+                proj4.X = -20;
+
+            }
+
+            void Angry()
+            {
+                SpawnReverseGunTurret(5, 0);
+
             }
 
             void SpawnShotgun(float tX, float tY)
@@ -94,7 +146,7 @@ namespace GraphicalTestApp
             void SpawnBeamTurret(float tX, float tY)
             {
                 //Simple simple beam turrets
-                Turret turret2 = new Turret(root, 0);
+                Turret turret2 = new Turret(root, "beam");
                 spinner.AddChild(turret2);
                 Sprite turret2Sprite = new Sprite("GFX/Tanks/tankRed.png");
                 turret2.AddChild(turret2Sprite);
@@ -114,6 +166,17 @@ namespace GraphicalTestApp
                 turret1.Y = tY;
             }
 
+            void SpawnReverseGunTurret(float tX, float tY)
+            {
+                //Simple simple rotating turrets
+                Turret turret3 = new Turret(root, "reverse");
+                spinner.AddChild(turret3);
+                Sprite turret3Sprite = new Sprite("GFX/Tanks/tankGreen.png");
+                turret3.AddChild(turret3Sprite);
+                turret3.X = tX;
+                turret3.Y = tY;
+            }
+
             void SpawnStationaryGunTurret(float tX, float tY)
             {
                 //Simple simple gun turrets
@@ -128,7 +191,7 @@ namespace GraphicalTestApp
             void SpawnWiggleGunTurret(float tX, float tY)
             {
                 //Simple simple gun turrets
-                Turret turret1 = new Turret(root, false);
+                Turret turret1 = new Turret(root, "wiggle");
                 enemyCenter.AddChild(turret1);
                 Sprite turret1Sprite = new Sprite("GFX/Tanks/tankBlue.png");
                 turret1.AddChild(turret1Sprite);
@@ -139,7 +202,7 @@ namespace GraphicalTestApp
             void SpawnRotatingTurret(float tX, float tY)
             {
                 //Simple simple rotating turrets
-                Turret turret3 = new Turret(root, true);
+                Turret turret3 = new Turret(root, "rotate");
                 spinner.AddChild(turret3);
                 Sprite turret3Sprite = new Sprite("GFX/Tanks/tankGreen.png");
                 turret3.AddChild(turret3Sprite);
@@ -171,7 +234,7 @@ namespace GraphicalTestApp
 
                 for (int i = 0; i < 4; i++)
                 {
-                    Turret turretLeft2 = new Turret(root, true);
+                    Turret turretLeft2 = new Turret(root, "rotate");
                     enemLeft2.AddChild(turretLeft2);
                     Sprite turretLeftSprite2 = new Sprite("GFX/Tanks/barrelRed.png");
                     turretLeft2.AddChild(turretLeftSprite2);
@@ -194,7 +257,7 @@ namespace GraphicalTestApp
                 turretLeft.AddChild(turretLeftSprite);
                 turretLeft.Y = 20;
 
-                Turret turretRight = new Turret(root, 0);
+                Turret turretRight = new Turret(root, "beam");
                 enemRight.AddChild(turretRight);
                 Sprite turretRightSprite = new Sprite("GFX/Tanks/barrelBeige_outline.png");
                 turretRight.AddChild(turretRightSprite);
@@ -237,7 +300,7 @@ namespace GraphicalTestApp
             //tur.AddChild(toga3);
             //tur.X = 300;
             //tur.Y = 200;
-
+            */
             //## Set up game here ##//
 
             game.Run();

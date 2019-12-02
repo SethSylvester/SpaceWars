@@ -9,14 +9,52 @@ namespace GraphicalTestApp
     class Spinner : Entity
     {
 
+        float _speed = 0f;
+
         public Spinner()
         {
             OnUpdate += Orbit;
         }
 
+        //variable speed spinner
+        public Spinner(string rotationSpeed)
+        {
+            if (rotationSpeed == "fast")
+            {
+                OnUpdate += FastOrbit;
+            }
+        }
+        //Fully custom spinner
+        public Spinner(float x, float y, float speed, string rotationSpeed)
+        {
+            X = x;
+            Y = y;
+            if (rotationSpeed == "fast")
+            {
+                OnUpdate += FastOrbit;
+            }
+            _speed = speed;
+            OnUpdate += MoveDown;
+        }
+
         private void Orbit(float deltaTime)
         {
             Rotate(0.3f * deltaTime);
+        }
+
+        private void FastOrbit(float deltaTime)
+        {
+            Rotate(1.1f * deltaTime);
+        }
+
+        private void MoveDown(float deltaTime)
+        {
+            YVelocity = +_speed * deltaTime;
+
+            if (Y < 0 || Y > 750 || X <= 5 || X >= 800)
+            {
+                Parent.RemoveChild(this);
+            }
         }
 
     }

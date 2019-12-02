@@ -37,15 +37,15 @@ namespace GraphicalTestApp
         public bool DetectCollision(AABB other)
         {
             // test for not overlapped as it exits faster
-            return !(Right < other.Left || Top < other.Bottom ||
-            Left > Right || Bottom > other.Top);
+            return !(Bottom < other.Top || Right < other.Left ||
+            Top > other.Bottom || Left > other.Right);
         }
 
         public bool DetectCollision(Vector3 point)
         {
             // test for not overlapped as it exits faster
-            return !(point.x < _min.x || point.y < _min.y ||
-            point.x > _max.x || point.y > _max.y);
+            return !(point.y < Top || point.x < Left ||
+            point.y > Bottom || point.x > Right);
         }
 
         //Draw the bounding box to the screen
@@ -71,6 +71,13 @@ namespace GraphicalTestApp
         {
             Width = width;
             Height = height;
+        }
+        public AABB(float width, float height, float x, float y)
+        {
+            Width = width;
+            Height = height;
+            X = x;
+            Y = y;
         }
 
         public void Move(Vector3 point)

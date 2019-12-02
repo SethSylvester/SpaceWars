@@ -92,8 +92,6 @@ namespace GraphicalTestApp
             child.Parent = this;
 
             _additions.Add(child);
-            //Add child to collection
-            //_children.Add(child);
         }
 
         public void RemoveChild(Actor child)
