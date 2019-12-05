@@ -53,6 +53,14 @@ namespace GraphicalTestApp
             {
                 OnUpdate += FireGunReverse;
             }
+            else if (type == "reverse2")
+            {
+                OnUpdate += FireGunReverse2;
+            }
+            else if (type == "reverse3")
+            {
+                OnUpdate += FireGunReverse3;
+            }
 
         }
 
@@ -202,6 +210,103 @@ namespace GraphicalTestApp
                 for (float i = 0; i < 3; i += 0.5f)
                 {
                     gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "reverseRight");
+                }
+            }
+        }
+
+        private void FireGunReverse2(float deltaTime)
+        {
+            //RL.DrawText(Convert.ToString(_rotation), 800, 355, 25, Color.WHITE);
+
+            //checks if canshoot aka the timer is done.
+            if (_timer.Seconds >= 0.2f)
+            {
+                _rotation = GetRotation();
+                _timer.Restart();
+                //shoot function
+                //Down Shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i + _rotation, "down");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i + _rotation, "down");
+                }
+                //up shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i + _rotation, "up");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i + _rotation, "up");
+                }
+                //Left Shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i + _rotation, "left");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i + _rotation, "left");
+                }
+                //Right Shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i + _rotation, "right");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i + _rotation, "right");
+                }
+            }
+        }
+        private void FireGunReverse3(float deltaTime)
+        {
+            //RL.DrawText(Convert.ToString(_rotation), 800, 355, 25, Color.WHITE);
+
+            //checks if canshoot aka the timer is done.
+            if (_timer.Seconds >= 0.2f)
+            {
+                _rotation = GetRotation();
+                _timer.Restart();
+                //shoot function
+                //Down Shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i, "down");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "down");
+                }
+                //up shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i, "up");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "up");
+                }
+                //Left Shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i, "left");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "left");
+                }
+                //Right Shots
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, i, "right");
+                }
+                for (float i = 0; i < 3; i += 0.5f)
+                {
+                    gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "right");
                 }
             }
         }

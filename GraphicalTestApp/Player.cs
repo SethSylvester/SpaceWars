@@ -10,7 +10,7 @@ namespace GraphicalTestApp
     class Player : Entity
     {
         //Stats
-        private int _hp = 3;
+        private int _hp = 300;
         private int _coins = 0;
         private bool _armor = false;
         private bool _iFrames = false;
@@ -19,8 +19,23 @@ namespace GraphicalTestApp
         //lets the player shoot
         private Gun _playerGun;
         private bool _canShoot = true;
+        private string _currentGun = "playerUp";
+        public float shootSpeed = 0.1f;
+
         //The players speed
-        private float Speed { get; set; } = 85f;
+        private float Speed { get; set; } = 80f;
+        //Sets the diagonal speed
+        private float DiagonalSpeed
+        {
+            get
+            {
+                return (float)Math.Sqrt((Speed * Speed) + (Speed * Speed))/2;
+            }
+            set
+            {
+               DiagonalSpeed = (float)Math.Sqrt((Speed * Speed) + (Speed * Speed))/2;
+            }
+        }
 
         //Armor Property
         public bool Armor
@@ -59,7 +74,10 @@ namespace GraphicalTestApp
             _interface = _inter;
 
             //Gives the player a Hitbox
-            _hitbox = new AABB(16, 16);
+            _hitbox = new AABB(8, 8);
+            Sprite toga = new Sprite("GFX/Toga.png");
+
+            AddChild(toga);
             AddChild(_hitbox);
             _instance = this;
 
@@ -67,10 +85,7 @@ namespace GraphicalTestApp
             _playerGun = new Gun(actor);
 
             //Reads the keys every frame
-            OnUpdate += MoveUp;
-            OnUpdate += MoveDown;
-            OnUpdate += MoveLeft;
-            OnUpdate += MoveRight;
+            OnUpdate += Move;
             //Updates the interface
             OnUpdate += StatCount;
             //Checks to see if touched
@@ -83,7 +98,7 @@ namespace GraphicalTestApp
         private void Shoot(float deltaTime)
         {
             //Gives a small delay between shots as to not spam
-            if (_shootTimer.Seconds >= 0.25f)
+            if (_shootTimer.Seconds >= shootSpeed)
             {
                 _canShoot = true;
                 _shootTimer.Restart();
@@ -92,18 +107,18 @@ namespace GraphicalTestApp
             //Angles the bullets a little bit infront of the plane so you don't clip
             if (Input.IsKeyDown(32) && Input.IsKeyDown(87) && _canShoot)
             {
-                _playerGun.Shoot(X - 100, Y - 20, 0, "playerUp");
-                _playerGun.Shoot(X - 100, Y - 20, -0.25f, "playerUp");
-                _playerGun.Shoot(X - 100, Y - 20, 0.25f, "playerUp");
+                _playerGun.Shoot(X - 100, Y - 20, 0, _currentGun);
+                _playerGun.Shoot(X - 100, Y - 20, -0.25f, _currentGun);
+                _playerGun.Shoot(X - 100, Y - 20, 0.25f, _currentGun);
                 _canShoot = false;
             }
 
             //Normal shoot function
             else if (Input.IsKeyDown(32) && _canShoot)
             {
-            _playerGun.Shoot(X - 100, Y - 10, 0, "playerUp");
-            _playerGun.Shoot(X - 100, Y - 10, -0.25f, "playerUp");
-            _playerGun.Shoot(X - 100, Y - 10, 0.25f, "playerUp");
+            _playerGun.Shoot(X - 100, Y - 10, 0, _currentGun);
+            _playerGun.Shoot(X - 100, Y - 10, -0.25f, _currentGun);
+            _playerGun.Shoot(X - 100, Y - 10, 0.25f, _currentGun);
                 _canShoot = false;
             }
         }
@@ -113,6 +128,113 @@ namespace GraphicalTestApp
             if (_iframesTimer.Seconds >= 0.5f)
             {
                 _iFrames = false;
+            }
+
+        }
+
+        private void Move(float deltaTime)
+        {
+            //Up down right
+            if (Input.IsKeyDown(87) && Y > 10 &&
+                    Input.IsKeyDown(83) && Y < 750 &&
+                    Input.IsKeyDown(68) && X < 800)
+            {
+                X += Speed * deltaTime;
+            }
+            //Up down left
+            else if (Input.IsKeyDown(87) && Y > 10 &&
+                    Input.IsKeyDown(83) && Y < 750 &&
+                    Input.IsKeyDown(65) && X > 10)
+            {
+                X -= Speed * deltaTime;
+            }
+            //left right up
+            else if (Input.IsKeyDown(65) && X > 10 &&
+                    Input.IsKeyDown(68) && X < 800 &&
+                    Input.IsKeyDown(87) && Y > 10)
+            {
+                Y -= Speed * deltaTime;
+            }
+            //left right down
+            else if (Input.IsKeyDown(65) && X > 10 &&
+                    Input.IsKeyDown(68) && X < 800 &&
+                    Input.IsKeyDown(83) && Y < 750)
+            {
+                Y += Speed * deltaTime;
+            }
+
+            //Up Right
+            else if (Input.IsKeyDown(87) && Y > 10 &&
+                Input.IsKeyDown(68) && X < 800)
+            {
+                Y -= DiagonalSpeed * deltaTime;
+                X += DiagonalSpeed * deltaTime;
+            }
+            //Up Left
+            else if (Input.IsKeyDown(87) && Y > 10 &&
+                    Input.IsKeyDown(65) && X > 10)
+            {
+                Y -= DiagonalSpeed * deltaTime;
+                X -= DiagonalSpeed * deltaTime;
+            }
+            //Down Right
+            else if (Input.IsKeyDown(83) && Y < 750 &&
+                Input.IsKeyDown(68) && X < 800)
+            {
+                Y += DiagonalSpeed * deltaTime;
+                X += DiagonalSpeed * deltaTime;
+            }
+            //Down Left
+            else if (Input.IsKeyDown(83) && Y < 750 &&
+                       Input.IsKeyDown(65) && X > 10)
+            {
+                Y += DiagonalSpeed * deltaTime;
+                X -= DiagonalSpeed * deltaTime;
+            }
+            //Up Down
+            else if (Input.IsKeyDown(87) && Y > 10 &&
+                    Input.IsKeyDown(83) && Y < 750)
+            { }
+            //Left Right
+            else if (Input.IsKeyDown(65) && X > 10 &&
+                    Input.IsKeyDown(68) && X < 800)
+            { }
+            //Up
+            else if (Input.IsKeyDown(87) && Y > 10)
+            {
+                Y -= Speed * deltaTime;
+            }
+            //Down
+            else if (Input.IsKeyDown(83) && Y < 750)
+            {
+                Y += Speed * deltaTime;
+            }
+            //Left
+            else if (Input.IsKeyDown(65) && X > 10)
+            {
+                X -= Speed * deltaTime;
+            }
+            //Right
+            else if (Input.IsKeyDown(68) && X < 800)
+            {
+                X += Speed * deltaTime;
+            }
+
+        }
+
+        private void MoveUp(float deltaTime)
+        {
+            if (Input.IsKeyDown(87) && Y > 10)
+            {
+                Y -= Speed * deltaTime;
+            }
+        }
+
+        private void MoveDown(float deltaTime)
+        {
+            if (Input.IsKeyDown(83) && Y < 750)
+            {
+                Y += Speed * deltaTime;
             }
 
         }
@@ -137,22 +259,6 @@ namespace GraphicalTestApp
             }
         }
 
-        private void MoveUp(float deltaTime)
-        {
-            if (Input.IsKeyDown(87) && Y > 10)
-            {
-                Y -= Speed * deltaTime;
-            }
-        }
-
-        private void MoveDown(float deltaTime)
-        {
-            if (Input.IsKeyDown(83) && Y < 750)
-            {
-                Y += Speed * deltaTime;
-            }
-
-        }
 
         //###INTERFACE STUFF###
 

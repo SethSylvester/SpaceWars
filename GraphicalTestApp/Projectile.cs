@@ -65,7 +65,32 @@ namespace GraphicalTestApp
                 _friendly = friend;
                 OnUpdate += MoveUp;
             }
+            else if (type == "down")
+            {
+                //Checks to see if the projectile is friendly and thus will not damage the player
+                _friendly = friend;
+                OnUpdate += MoveDown;
+            }
+            else if (type == "left")
+            {
+                //Checks to see if the projectile is friendly and thus will not damage the player
+                _friendly = friend;
+                OnUpdate += MoveLeft;
+            }
+            else if (type == "right")
+            {
+                //Checks to see if the projectile is friendly and thus will not damage the player
+                _friendly = friend;
+                OnUpdate += MoveRight;
+            }
 
+            else if (type == "playerUp")
+            {
+                //Checks to see if the projectile is friendly and thus will not damage the player
+                _friendly = friend;
+                OnUpdate += MoveUp;
+                _speed = 300f;
+            }
             else if (type == "reverse")
             {
                 //Checks to see if the projectile is friendly and thus will not damage the player
@@ -99,7 +124,7 @@ namespace GraphicalTestApp
             //Checks to see if the beam is friendly and thus will not damage the player
             _friendly = friend;
             //Checks to see if the beam is touching the player
-            OnUpdate += TouchPlayer;
+            OnUpdate += TouchPlayerBeam;
             //Gives the beam a parent
             Beam(tParent);
             //Starts the time checker function to make sure the beam has proper timing
@@ -108,10 +133,11 @@ namespace GraphicalTestApp
         }
 
         //Custom parameter beam constructor
-        public Projectile(bool friend, Actor tParent, int height, int width, int direction)
+        public Projectile(float x, bool friend, Actor tParent, int height, int width, int direction)
         {
             //###Custom beam parameters###
             //Which way the beam is firing
+            X = x;
             _direction = direction;
             //The beams height and width
             _beamHeight = height;
@@ -120,13 +146,14 @@ namespace GraphicalTestApp
             //Checks to see if the beam is friendly and thus will not damage the player
             _friendly = friend;
             //Checks to see if the beam is touching the player
-            OnUpdate += TouchPlayer;
+            OnUpdate += TouchPlayerBeam;
             //Gives the beam a parent
             Beam(tParent);
             //Starts the time checker function to make sure the beam has proper timing
             //Which means that it is growing and shrinking at an appropriate rate
             OnUpdate += TimeChecker;
         }
+
         private void Beam(Actor tParent)
         {
             //Shoots the beam from its parent and keeps it anchored cuz its a beam
@@ -138,24 +165,29 @@ namespace GraphicalTestApp
         void TimeChecker(float deltaTime)
         {
             //Beam appears
-            if (_timer.Seconds >= 0.001f && _currentBeamHeight < _beamHeight && _direction == 1)
+            if (_timer.Seconds >= 0.0001f && _currentBeamHeight < _beamHeight && _direction == 1)
             {
                 //Tells the beam to fire up
                 BeamFireUp();
             }
-            else if (_timer.Seconds >= 0.001f && _currentBeamHeight < _beamHeight && _direction == 2)
+            else if (_timer.Seconds >= 0.0001f && _currentBeamHeight < _beamHeight && _direction == 2)
+            {
+                //Tells the beam to fire down
+                BeamFireDown();
+            }
+            else if (_timer.Seconds >= 0.0001f && _currentBeamHeight < _beamHeight && _direction == 3)
             {
                 //Tells the beam to fire down
                 BeamFireDown();
             }
 
             //Beam disappears
-            else if (_timer.Seconds >= 0.005f && _currentBeamHeight == _beamHeight && _direction == 1)
+            else if (_timer.Seconds >= 0.0001f && _currentBeamHeight == _beamHeight && _direction == 1)
             {
                 //Tells the beam to disappear if it was fired upwards
                 BeamDisappearUp();
             }
-            else if (_timer.Seconds >= 0.005f && _currentBeamHeight == _beamHeight && _direction == 2)
+            else if (_timer.Seconds >= 0.0001f && _currentBeamHeight == _beamHeight && _direction == 2)
             {
                 //Tells the beam to disappear if it was fired downwards
                 BeamDisappearDown();
@@ -253,7 +285,19 @@ namespace GraphicalTestApp
                     Player.Instance.TakeDamage();
                 }
             }
+        }
 
+        private void TouchPlayerBeam(float deltaTime)
+        {
+            if (Hitbox == null)
+            {
+                return;
+            }
+
+            if (Hitbox.DetectCollision(Player.Instance.HitBox))
+            {
+                Player.Instance.TakeDamage();
+            }
 
         }
 
@@ -367,7 +411,6 @@ namespace GraphicalTestApp
                 Parent.RemoveChild(this);
             }
         }
-
         
         private void MoveLeft(float deltaTime)
         {

@@ -51,7 +51,7 @@ namespace GraphicalTestApp
         {
             YVelocity = +_speed * deltaTime;
 
-            if (Y < 0 || Y > 750 || X <= 5 || X >= 800)
+            if (YAbsolute < 0 || YAbsolute > 750 || XAbsolute <= 0 || XAbsolute >= 800)
             {
                 Parent.RemoveChild(this);
             }

@@ -57,10 +57,40 @@ namespace GraphicalTestApp
                 projectile.Y = y;
                 projectile.Rotation = rotation * 60;
             }
+            else if (type == "down" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, "down");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
+            else if (type == "left" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, "left");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
+            else if (type == "right" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, "right");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
 
             else if (type == "playerUp" && BossFightController.CutScene == false)
             {
-                Projectile projectile = new Projectile(true, "up");
+                Projectile projectile = new Projectile(true, "playerUp");
                 _root.AddChild(projectile);
                 Sprite projectileSprite = new Sprite("GFX/Coin.png");
                 projectile.AddChild(projectileSprite);

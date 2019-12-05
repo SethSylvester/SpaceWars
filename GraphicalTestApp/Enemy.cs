@@ -10,69 +10,84 @@ namespace GraphicalTestApp
 {
     class Enemy : Entity
     {
+        //Stats
         private int _hp = 70;
-        private int _counter = 0;
+        public int HP { get { return _hp; } }
+        public float Speed { get; set; } = 140f;
+
+        //Movement Bools for Phase III
         private bool _moveleft = true;
         private bool _MoveUp = true;
-        private bool _phaseThreeStarted = false;
 
-        private int _phase = 1;
+        //Phase tracker & Property
+        private int _phase = 4;
+        private int _maxPhase = 6;
         public int Phase { get { return _phase; } }
 
         //Variables used for attacks
         private bool _invincible = false;
         private int nextAttack = 0;
         private bool _attacking = false;
+        private bool _healing = false;
 
         //Checks if a beam or such has fired.
         private bool _usedAttack = false;
-        private bool _healing = false;
 
+        //Random class and timers
         private Random rnd = new Random();
         private Timer cutSceneTimer = new Timer();
         public Timer attackTimer = new Timer();
 
-        public float Speed { get; set; } = 140f;
-        public int HP { get { return _hp; } }
 
+        //The Hitbox
         private AABB _hitbox;
         public AABB HitBox
         {
             get { return _hitbox; }
         }
 
+        //Empty instance class for other files to use
         private static Enemy _instance;
         public static Enemy Instance
         {
             get { return _instance; }
         }
 
+        //Empty root class for the parent
         private Actor _root;
 
+        //Constructor for the boss
         public Enemy(Actor root)
         {
             //Sets the root
             _root = root;
-            //Gives the player a Hitbox
+
+            //Gives the enemy a Hitbox
             _hitbox = new AABB(140, 140);
             AddChild(_hitbox);
 
+            //Sets the static instance of the enemy
             _instance = this;
 
+            //All the onUpdate functions to make the enemy function
             OnUpdate += AI;
             OnUpdate += HealthBar;
             OnUpdate += Move;
             OnUpdate += Heal;
 
+            //Startup function
             StartUp();
         }
 
+        //Startup function
         private void StartUp()
         {
             Y = -20;
-            BossFightController.CutScene = true;
+            Y = 100;
+            BossFightController.CutScene = false;
         }
 
+        //Keeps track of the bosses HP and tells it to heal if its not time to die.
         private void HealthBar(float deltaTime)
         {
             if (!_invincible)
@@ -87,7 +102,7 @@ namespace GraphicalTestApp
                 {
                     RL.DrawRectangle(320, 5, _hp, 10, Color.RED);
                 }
-                if (_hp <= 10 && _phase < 3)
+                if (_hp <= 10 && _phase < _maxPhase)
                 {
                     _healing = true;
                 }
@@ -95,6 +110,7 @@ namespace GraphicalTestApp
             }
         }
 
+        //Healing function
         private void Heal(float deltaTime)
         {
             if (_healing)
@@ -126,45 +142,6 @@ namespace GraphicalTestApp
         }
 
         //###Attacks###
-
-         private void RotationGun()
-        {
-            Spinner test = new Spinner(X, Y, 50, "fast");
-            Projectile proj = new Projectile();
-            Projectile proj1 = new Projectile();
-            Projectile proj2 = new Projectile();
-            Projectile proj3 = new Projectile();
-            Projectile proj4 = new Projectile();
-            Projectile proj5 = new Projectile();
-
-            _root.AddChild(test);
-
-            test.AddChild(proj);
-            test.AddChild(proj1);
-            test.AddChild(proj2);
-            test.AddChild(proj3);
-            test.AddChild(proj4);
-            test.AddChild(proj5);
-            Sprite projectileSprite = new Sprite("GFX/Coin.png");
-            Sprite projectileSprite3 = new Sprite("GFX/Coin.png");
-            Sprite projectileSprite2 = new Sprite("GFX/Coin.png");
-            Sprite projectileSprite4 = new Sprite("GFX/Coin.png");
-            Sprite projectileSprite5 = new Sprite("GFX/Coin.png");
-            Sprite projectileSprite6 = new Sprite("GFX/Coin.png");
-            proj.AddChild(projectileSprite);
-            proj1.AddChild(projectileSprite3);
-            proj2.AddChild(projectileSprite4);
-            proj3.AddChild(projectileSprite2);
-            proj4.AddChild(projectileSprite5);
-            proj5.AddChild(projectileSprite6);
-            proj.X = 10;
-            proj1.X = 20;
-            proj2.X = 30;
-            proj3.X = -10;
-            proj4.X = -20;
-
-        }
-
         //Flashes a warning that the own attack is coming
         //Currently has a bug to make a solid rectangle instead of an outline
         private void OwnWarning()
@@ -186,7 +163,7 @@ namespace GraphicalTestApp
             if (!_usedAttack)
             {
                 _usedAttack = true;
-                Projectile proj = new Projectile(false, this, 200, 250, 1);
+                Projectile proj = new Projectile(1, false, this, 200, 250, 1);
                 proj.Y = 660;
             }
             if (attackTimer.Seconds >= 5)
@@ -209,7 +186,7 @@ namespace GraphicalTestApp
                 YVelocity = 0f;
                 BossFightController.CutScene = false;
             }
-            if (_phase == 3)
+            if (_phase == 6)
             {
                 if (_moveleft)
                 {
@@ -233,7 +210,7 @@ namespace GraphicalTestApp
 
         private void MoveUp(float deltaTime)
         {
-            if (_phase == 3)
+            if (_phase == 6)
             {
                 //if possible to turn left
                 if (Y > 100)
@@ -250,7 +227,7 @@ namespace GraphicalTestApp
         }
         private void MoveDown(float deltaTime)
         {
-            if (_phase == 3)
+            if (_phase == 6)
             {
                 //if possible to turn left
                 if (Y < 650)
@@ -267,7 +244,7 @@ namespace GraphicalTestApp
         }
         private void MoveLeft(float deltaTime)
         {
-            if (_phase == 3)
+            if (_phase == 6)
             {
                 //if possible to turn left
                 if (X > 130)

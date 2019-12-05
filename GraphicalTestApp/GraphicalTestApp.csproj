@@ -57,9 +57,11 @@
     <Compile Include="Gun.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Interface.cs" />
+    <Compile Include="Ladder.cs" />
     <Compile Include="Matrix3.cs" />
     <Compile Include="Matrix4.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="Collectable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
