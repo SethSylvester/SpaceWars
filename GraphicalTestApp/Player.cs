@@ -10,21 +10,27 @@ namespace GraphicalTestApp
     class Player : Entity
     {
         //Stats
-        private int _hp = 300;
+        private int _hp;
         private int _coins = 0;
-        private bool _armor = false;
+
+        //Handles IFrames
         private bool _iFrames = false;
         private Timer _iframesTimer = new Timer();
 
         //lets the player shoot
         private Gun _playerGun;
+        //Tells the player they can shoot
         private bool _canShoot = true;
+        //Sets the players gun incase they change guns
         private string _currentGun = "playerUp";
+        //How fast the player can shoot
         public float shootSpeed = 0.1f;
 
         //The players speed
-        private float Speed { get; set; } = 80f;
-        //Sets the diagonal speed
+        private float Speed { get; set; } = 85f;
+
+        //Sets the diagonal speed so the player doesn't double their movement when
+        //moving diagonally
         private float DiagonalSpeed
         {
             get
@@ -37,59 +43,63 @@ namespace GraphicalTestApp
             }
         }
 
-        //Armor Property
-        public bool Armor
-        {
-            get
-            {
-                return _armor;
-
-            }
-        }
-
         //Instances the player and their hitbox
         private static Player _instance;
         private AABB _hitbox;
 
+        //the hitbox property for when it must be refrenced
         public AABB HitBox
         {
             get { return _hitbox; }
         }
 
+        //Limits how often the player can shoot
         private Timer _shootTimer = new Timer();
 
+        //Sets the instance of the player to be static, allowing for the players hitbox to
+        //be detected
         public static Player Instance
         {
             get { return _instance; }
         }
 
-        //Stuff
+        //The players interface
         private Interface _interface;
 
         //###Constructor###
         //Allows a custom icon to be used
-        public Player(Interface _inter, Actor actor)
+        public Player(Interface _inter, Actor actor, string skin, bool weenie)
         {
             //Gives the player an interface
             _interface = _inter;
 
             //Gives the player a Hitbox
             _hitbox = new AABB(8, 8);
-            Sprite toga = new Sprite("GFX/Toga.png");
+            Sprite playerSprite = new Sprite(skin);
 
-            AddChild(toga);
+            AddChild(playerSprite);
             AddChild(_hitbox);
             _instance = this;
 
             //Gives the player a gun
             _playerGun = new Gun(actor);
 
+            //Checks for Weenie mode and adjusts HP accordingly.
+            if (weenie)
+            {
+                _hp = 3000;
+            }
+            else
+            {
+                _hp = 3;
+            }
+
             //Reads the keys every frame
             OnUpdate += Move;
             //Updates the interface
             OnUpdate += StatCount;
             //Checks to see if touched
-            OnUpdate += Touch;
+            OnUpdate += IFramesOff;
             //OnUpdate += Touch;
             OnUpdate += Shoot;
         }
@@ -123,7 +133,8 @@ namespace GraphicalTestApp
             }
         }
 
-        void Touch(float deltaTime)
+        //Turns off the Iframes
+        void IFramesOff(float deltaTime)
         {
             if (_iframesTimer.Seconds >= 0.5f)
             {
@@ -132,6 +143,7 @@ namespace GraphicalTestApp
 
         }
 
+        //The move functions for the player
         private void Move(float deltaTime)
         {
             //Up down right
@@ -222,46 +234,7 @@ namespace GraphicalTestApp
 
         }
 
-        private void MoveUp(float deltaTime)
-        {
-            if (Input.IsKeyDown(87) && Y > 10)
-            {
-                Y -= Speed * deltaTime;
-            }
-        }
-
-        private void MoveDown(float deltaTime)
-        {
-            if (Input.IsKeyDown(83) && Y < 750)
-            {
-                Y += Speed * deltaTime;
-            }
-
-        }
-
-        //Moves right one space
-        private void MoveRight(float deltaTime)
-        { 
-            //Checks to make sure D is pressed & not OOB
-            if (Input.IsKeyDown(68) && X < 800)
-            {
-                X += Speed * deltaTime;
-            }
-        }
-
-        //character moves left
-        private void MoveLeft(float deltaTime)
-        {
-            //Checks to make sure A is pressed & not OOB
-            if (Input.IsKeyDown(65) && X > 10)
-            {
-                X -= Speed * deltaTime;
-            }
-        }
-
-
         //###INTERFACE STUFF###
-
         //Tells the interface what to write for the stats
         private void StatCount(float deltaTime)
         {
@@ -275,8 +248,6 @@ namespace GraphicalTestApp
             {
                 RemoveChild(this);
             }
-            //Sends the coins number to the interface
-            _interface.SetCoins(_coins);
         }
 
         //Stat changing functions
@@ -286,44 +257,30 @@ namespace GraphicalTestApp
         }
 
         //###Damage and Iframes###
+        //The function for taking damage.
         public void TakeDamage()
         {
             //todo, add animations
             if (!_iFrames)
             {
                 IFrames();
-                if (!_armor)
+                _hp--;
+
+                if (_hp <= 0)
                 {
-                    _hp--;
-                    if (_hp <= 0)
-                    {
-                        Die();
-                    }
-                }
-                else
-                {
-                    _armor = false;
+                    Die();
                 }
             }
         }
 
-        //void Touch(float DeltaTime)
-        //{
-        //    if (_Sprite.Hitbox.Overlaps(new Vector3(X, Y, 1)))
-        //    {
-        //        RemoveChild(this);
-        //    }
-        //}
-
-
-            //IFrames function, need to replace system.timers with the timer class
+        //IFrames function, need to replace system.timers with the timer class
         public void IFrames()
         {
             _iFrames = true;
             _iframesTimer.Restart();
         }
 
-        //Instantly kills the player
+        //Kills the player and removes them from the scene
         public void Die()
         {
             //Todo: Add animation

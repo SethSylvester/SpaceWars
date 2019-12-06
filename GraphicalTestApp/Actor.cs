@@ -22,7 +22,7 @@ namespace GraphicalTestApp
 
         private Matrix3 _localTransform = new Matrix3();
         private Matrix3 _globalTransform = new Matrix3();
-
+        int counter = 0;
         public float X
         {
             get
@@ -164,6 +164,7 @@ namespace GraphicalTestApp
             {
                 child.Update(deltaTime);
             }
+            counter++;
         }
 
 

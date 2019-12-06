@@ -13,8 +13,10 @@ namespace GraphicalTestApp
 
         Sprite _sprite;
 
+        //Timer used for timing the effects
         Timer timer = new Timer();
 
+        //Constructor
         public Collectable(float x, float y, string type, string sprite)
         {
             X = x;
@@ -32,6 +34,7 @@ namespace GraphicalTestApp
             OnUpdate += PowerUp;
         }
 
+        //Checks to see if the player is touching the collectable
         private void Touch(float deltaTime)
         {
             if (_hitbox == null)
@@ -50,6 +53,7 @@ namespace GraphicalTestApp
 
         }
 
+        //Applies the powerup
         private void PowerUp(float deltaTime)
         {
             if (_hitbox == null)

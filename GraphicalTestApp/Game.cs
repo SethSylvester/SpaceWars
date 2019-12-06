@@ -13,6 +13,8 @@ namespace GraphicalTestApp
         //The Timer for the entire Game
         private Timer _gameTimer = new Timer();
 
+        public static bool Exit = false;
+
         //Creates a Game and new Scene instance as its active Scene
         public Game(int width, int height, string title)
         {
@@ -24,7 +26,7 @@ namespace GraphicalTestApp
         public void Run()
         {
             //Update and draw until the game is over
-            while (!RL.WindowShouldClose())
+            while (!RL.WindowShouldClose() && !Exit)
             {
                 //Change the Scene if needed
                 if (_root != _next)

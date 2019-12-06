@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Actor.cs" />
     <Compile Include="BossFightController.cs" />
+    <Compile Include="Cursor.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Game.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Ladder.cs" />
     <Compile Include="Matrix3.cs" />
     <Compile Include="Matrix4.cs" />
+    <Compile Include="Menu.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Collectable.cs" />
     <Compile Include="Program.cs" />

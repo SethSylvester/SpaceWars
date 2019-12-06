@@ -11,7 +11,7 @@ namespace GraphicalTestApp
     class Enemy : Entity
     {
         //Stats
-        private int _hp = 70;
+        private int _hp = 200;
         public int HP { get { return _hp; } }
         public float Speed { get; set; } = 140f;
 
@@ -20,8 +20,8 @@ namespace GraphicalTestApp
         private bool _MoveUp = true;
 
         //Phase tracker & Property
-        private int _phase = 4;
-        private int _maxPhase = 6;
+        private int _phase;
+        private int _maxPhase = 7;
         public int Phase { get { return _phase; } }
 
         //Variables used for attacks
@@ -57,8 +57,9 @@ namespace GraphicalTestApp
         private Actor _root;
 
         //Constructor for the boss
-        public Enemy(Actor root)
+        public Enemy(Actor root, byte phase)
         {
+            _phase = phase;
             //Sets the root
             _root = root;
 
@@ -93,7 +94,7 @@ namespace GraphicalTestApp
             if (!_invincible)
             {
                 //X, Y, Width, Height, Color
-                RL.DrawRectangle(318, 5, 152, 14, Color.GRAY);
+                RL.DrawRectangle(318, 5, 205, 14, Color.GRAY);
                 if (!_healing)
                 {
                     RL.DrawRectangle(320, 5, _hp, 10, Color.GREEN);
@@ -113,14 +114,16 @@ namespace GraphicalTestApp
         //Healing function
         private void Heal(float deltaTime)
         {
+            //If the boss is healing, it becomes invcible and regains HP
             if (_healing)
             {
-                if (_hp < 70 && cutSceneTimer.Seconds > 0.02f)
+                if (_hp < 200 && cutSceneTimer.Seconds > 0.009f)
                 {
                     _hp++;
                     cutSceneTimer.Restart();
                 }
-                else if (_hp >= 70)
+                //Tells the boss to stop healing
+                else if (_hp >= 200)
                 {
                     _healing = false;
                     _phase++;
@@ -131,6 +134,7 @@ namespace GraphicalTestApp
         //The attacking AI that determines which attacks to use.
         private void AI (float deltaTime)
         {
+            //Gives the boss a special attack on phase 2
             if (_phase == 2)
             {
                 if (attackTimer.Seconds > 0.01)
@@ -157,7 +161,7 @@ namespace GraphicalTestApp
             }
         }
 
-        //The sans style bone attack.
+        //The attack from the bottom of the screen.
         private void Own()
         {
             if (!_usedAttack)
@@ -186,6 +190,7 @@ namespace GraphicalTestApp
                 YVelocity = 0f;
                 BossFightController.CutScene = false;
             }
+            //During phase 6 the boss gains movement for that phase only
             if (_phase == 6)
             {
                 if (_moveleft)
@@ -207,7 +212,7 @@ namespace GraphicalTestApp
             }
         }
 
-
+        //Tells the boss to move up, used during phase 6
         private void MoveUp(float deltaTime)
         {
             if (_phase == 6)
@@ -225,6 +230,8 @@ namespace GraphicalTestApp
                 }
             }
         }
+
+        //Tells the boss to move down, used during phase 6
         private void MoveDown(float deltaTime)
         {
             if (_phase == 6)
@@ -242,6 +249,8 @@ namespace GraphicalTestApp
                 }
             }
         }
+
+        //Tells the boss to move left, used during phase 6
         private void MoveLeft(float deltaTime)
         {
             if (_phase == 6)
@@ -260,7 +269,7 @@ namespace GraphicalTestApp
             }
         }
 
-        //Moves right
+        //Tells the boss to move right, used during phase 6
         private void MoveRight(float deltaTime)
         {
             //if possible to move right

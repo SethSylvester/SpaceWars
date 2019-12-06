@@ -9,7 +9,7 @@ namespace GraphicalTestApp
     class Spinner : Entity
     {
 
-        float _speed = 0f;
+        float _speed;
 
         public Spinner()
         {
@@ -37,6 +37,7 @@ namespace GraphicalTestApp
             OnUpdate += MoveDown;
         }
 
+        //Two orbits at varying speeds
         private void Orbit(float deltaTime)
         {
             Rotate(0.3f * deltaTime);
@@ -47,6 +48,7 @@ namespace GraphicalTestApp
             Rotate(1.1f * deltaTime);
         }
 
+        //Tells the spinner to move down for one of the attacks
         private void MoveDown(float deltaTime)
         {
             YVelocity = +_speed * deltaTime;
