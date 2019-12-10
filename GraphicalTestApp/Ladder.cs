@@ -8,7 +8,7 @@ namespace GraphicalTestApp
 {
     class Ladder : Entity
     {
-        private float _speed = 160f;
+        private float _speed = 140f;
         private AABB _hitbox;
 
         //Constructor

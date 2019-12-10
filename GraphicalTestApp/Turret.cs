@@ -45,9 +45,9 @@ namespace GraphicalTestApp
                 OnUpdate += TurretWiggle;
                 OnUpdate += FireGun;
             }
-            else if (type == "beam")
+            else if (type == "rocket")
             {
-                OnUpdate += FireGunBeam;
+                OnUpdate += FireRocket;
             }
             else if (type == "reverse")
             {
@@ -163,6 +163,20 @@ namespace GraphicalTestApp
                 _timer.Restart();
                 //shoot function
                 gun.Shoot(XAbsolute - 100, YAbsolute + 30, _rotation*-1f);
+            }
+        }  
+        
+        //Clean this up later UwU
+        private void FireRocket(float deltaTime)
+        {
+            //RL.DrawText(Convert.ToString(_rotation), 800, 355, 25, Color.WHITE);
+
+            //checks if canshoot aka the timer is done.
+            if (_timer.Seconds >= 0.5f)
+            {
+                _timer.Restart();
+                //shoot function
+                gun.Shoot(XAbsolute - 100, YAbsolute + 30, _rotation*-1f, "rocket");
             }
         }
 
@@ -308,19 +322,6 @@ namespace GraphicalTestApp
                 {
                     gun.Shoot(XAbsolute - 100, YAbsolute + 30, -i, "right");
                 }
-            }
-        }
-
-        private void FireGunBeam(float deltaTime)
-        {
-            //RL.DrawText(Convert.ToString(_rotation), 800, 355, 25, Color.WHITE);
-
-            //checks if canshoot aka the timer is done.
-            if (_timer.Seconds >= 8.5f)
-            {
-                _timer.Restart();
-                //shoot function
-                gun.ShootBeam(XAbsolute - 100 + (_rotation*-1f), YAbsolute + 30, _rotation*-1f, this);
             }
         }
 

@@ -89,9 +89,12 @@ namespace GraphicalTestApp
                 PhaseTwoStart();
                 PhaseTwo();
             }
-            else if (Enemy.Instance.Phase == 3 && !_phaseThreeStarted)
+            else if (Enemy.Instance.Phase == 3)
             {
-                PhaseThreeStart();
+                if (!_phaseThreeStarted)
+                {
+                    PhaseThreeStart();
+                }
                 PhaseThree();
             }
             else if (Enemy.Instance.Phase == 4 && !_phaseFourStarted)
@@ -440,7 +443,7 @@ namespace GraphicalTestApp
             turretLeft.AddChild(turretLeftSprite);
             turretLeft.Y = 20;
 
-            Turret turretRight = new Turret(_root, "beam");
+            Turret turretRight = new Turret(_root, "rocket");
             enemRight.AddChild(turretRight);
             Sprite turretRightSprite = new Sprite("GFX/Tanks/barrelBeige_outline.png");
             turretRight.AddChild(turretRightSprite);

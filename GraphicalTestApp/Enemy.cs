@@ -71,7 +71,6 @@ namespace GraphicalTestApp
             _instance = this;
 
             //All the onUpdate functions to make the enemy function
-            OnUpdate += AI;
             OnUpdate += HealthBar;
             OnUpdate += Move;
             OnUpdate += Heal;
@@ -128,53 +127,6 @@ namespace GraphicalTestApp
                     _healing = false;
                     _phase++;
                 }
-            }
-        }
-
-        //The attacking AI that determines which attacks to use.
-        private void AI (float deltaTime)
-        {
-            //Gives the boss a special attack on phase 2
-            if (_phase == 2)
-            {
-                if (attackTimer.Seconds > 0.01)
-                {
-                    _attacking = true;
-                    OwnWarning();
-                }
-            }
-        }
-
-        //###Attacks###
-        //Flashes a warning that the own attack is coming
-        //Currently has a bug to make a solid rectangle instead of an outline
-        private void OwnWarning()
-        {
-            if (attackTimer.Seconds <= 0.6f ||
-                attackTimer.Seconds >= 1 && attackTimer.Seconds <= 1.6f)
-            {
-                RL.DrawRectangle(300, 560, 250, 200, Color.MAGENTA);
-            }
-            else if (attackTimer.Seconds >= 1.7)
-            {
-                Own();
-            }
-        }
-
-        //The attack from the bottom of the screen.
-        private void Own()
-        {
-            if (!_usedAttack)
-            {
-                _usedAttack = true;
-                Projectile proj = new Projectile(1, false, this, 200, 250, 1);
-                proj.Y = 660;
-            }
-            if (attackTimer.Seconds >= 5)
-            {
-                _attacking = false;
-                _usedAttack = false;
-                attackTimer.Restart();
             }
         }
 

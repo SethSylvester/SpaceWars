@@ -36,7 +36,7 @@ namespace GraphicalTestApp
             //The four skins you're allowed to pick from
             _skins[0] = "GFX/Toga.png";
             _skins[1] = "GFX/Carter.png";
-            _skins[2] = "GFX/Kyra.png";
+            _skins[2] = "GFX/Jax.png";
             _skins[3] = "GFX/Hunter.png";
 
             //loads in the default skin
@@ -175,6 +175,7 @@ namespace GraphicalTestApp
             //Draws the main menus options
             if (_mainMenu)
             {
+                RL.DrawText(Convert.ToString("Space Defender"), 275, 150, 75, Color.WHITE);
                 if (_choice == 1)
                 {
                     RL.DrawText(Convert.ToString("Start"), 450, 250, 25, Color.BLUE);

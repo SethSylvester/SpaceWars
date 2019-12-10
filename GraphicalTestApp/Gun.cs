@@ -67,6 +67,16 @@ namespace GraphicalTestApp
                 projectile.Y = y;
                 projectile.Rotation = rotation * 60;
             }
+            else if (type == "rocket" && BossFightController.CutScene == false)
+            {
+                Projectile projectile = new Projectile(false, "rocket");
+                _root.AddChild(projectile);
+                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                projectile.AddChild(projectileSprite);
+                projectile.X = x + 100;
+                projectile.Y = y;
+                projectile.Rotation = rotation * 60;
+            }
             else if (type == "left" && BossFightController.CutScene == false)
             {
                 Projectile projectile = new Projectile(false, "left");
@@ -138,18 +148,6 @@ namespace GraphicalTestApp
                 projectile.X = x + 100;
                 projectile.Y = y;
                 projectile.Rotation = rotation * 60;
-            }
-        }
-
-        //Handles the beam
-        public void ShootBeam(float _x, float _y, float rotation, Actor tParent)
-        {
-            if (BossFightController.CutScene == false)
-            {
-                Projectile projectile = new Projectile(false, tParent);
-                _root.AddChild(projectile);
-                Sprite projectileSprite = new Sprite("");
-                projectile.AddChild(projectileSprite);
             }
         }
 
