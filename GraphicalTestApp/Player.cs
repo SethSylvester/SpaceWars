@@ -11,7 +11,6 @@ namespace GraphicalTestApp
     {
         //Stats
         private int _hp;
-        private int _coins = 0;
 
         //Handles IFrames
         private bool _iFrames = false;
@@ -25,6 +24,12 @@ namespace GraphicalTestApp
         private string _currentGun = "playerUp";
         //How fast the player can shoot
         public float shootSpeed = 0.1f;
+
+        //Movement boundries
+        private float _upperLimit = 178f;
+        private float _lowerLimit = 750f;
+        private float _leftLimit = 10f;
+        private float _rightLimit = 800f;
 
         //The players speed
         private float Speed { get; set; } = 85f;
@@ -136,7 +141,7 @@ namespace GraphicalTestApp
         //Turns off the Iframes
         void IFramesOff(float deltaTime)
         {
-            if (_iframesTimer.Seconds >= 0.5f)
+            if (_iFrames && _iframesTimer.Seconds >= 0.5f)
             {
                 _iFrames = false;
             }
@@ -147,87 +152,87 @@ namespace GraphicalTestApp
         private void Move(float deltaTime)
         {
             //Up down right
-            if (Input.IsKeyDown(87) && Y > 10 &&
-                    Input.IsKeyDown(83) && Y < 750 &&
-                    Input.IsKeyDown(68) && X < 800)
+            if (Input.IsKeyDown(87) && Y > _upperLimit &&
+                    Input.IsKeyDown(83) && Y < _lowerLimit &&
+                    Input.IsKeyDown(68) && X < _rightLimit)
             {
                 X += Speed * deltaTime;
             }
             //Up down left
-            else if (Input.IsKeyDown(87) && Y > 10 &&
-                    Input.IsKeyDown(83) && Y < 750 &&
-                    Input.IsKeyDown(65) && X > 10)
+            else if (Input.IsKeyDown(87) && Y > _upperLimit &&
+                    Input.IsKeyDown(83) && Y < _upperLimit &&
+                    Input.IsKeyDown(65) && X > _leftLimit)
             {
                 X -= Speed * deltaTime;
             }
             //left right up
-            else if (Input.IsKeyDown(65) && X > 10 &&
-                    Input.IsKeyDown(68) && X < 800 &&
-                    Input.IsKeyDown(87) && Y > 10)
+            else if (Input.IsKeyDown(65) && X > _leftLimit &&
+                    Input.IsKeyDown(68) && X < _rightLimit &&
+                    Input.IsKeyDown(87) && Y > _upperLimit)
             {
                 Y -= Speed * deltaTime;
             }
             //left right down
-            else if (Input.IsKeyDown(65) && X > 10 &&
-                    Input.IsKeyDown(68) && X < 800 &&
-                    Input.IsKeyDown(83) && Y < 750)
+            else if (Input.IsKeyDown(65) && X > _leftLimit &&
+                    Input.IsKeyDown(68) && X < _rightLimit &&
+                    Input.IsKeyDown(83) && Y < _lowerLimit)
             {
                 Y += Speed * deltaTime;
             }
 
             //Up Right
-            else if (Input.IsKeyDown(87) && Y > 10 &&
-                Input.IsKeyDown(68) && X < 800)
+            else if (Input.IsKeyDown(87) && Y > _upperLimit &&
+                Input.IsKeyDown(68) && X < _rightLimit)
             {
                 Y -= DiagonalSpeed * deltaTime;
                 X += DiagonalSpeed * deltaTime;
             }
             //Up Left
-            else if (Input.IsKeyDown(87) && Y > 10 &&
-                    Input.IsKeyDown(65) && X > 10)
+            else if (Input.IsKeyDown(87) && Y > _upperLimit &&
+                    Input.IsKeyDown(65) && X > _leftLimit)
             {
                 Y -= DiagonalSpeed * deltaTime;
                 X -= DiagonalSpeed * deltaTime;
             }
             //Down Right
-            else if (Input.IsKeyDown(83) && Y < 750 &&
-                Input.IsKeyDown(68) && X < 800)
+            else if (Input.IsKeyDown(83) && Y < _lowerLimit &&
+                Input.IsKeyDown(68) && X < _rightLimit)
             {
                 Y += DiagonalSpeed * deltaTime;
                 X += DiagonalSpeed * deltaTime;
             }
             //Down Left
-            else if (Input.IsKeyDown(83) && Y < 750 &&
-                       Input.IsKeyDown(65) && X > 10)
+            else if (Input.IsKeyDown(83) && Y < _lowerLimit &&
+                       Input.IsKeyDown(65) && X > _leftLimit)
             {
                 Y += DiagonalSpeed * deltaTime;
                 X -= DiagonalSpeed * deltaTime;
             }
             //Up Down
-            else if (Input.IsKeyDown(87) && Y > 10 &&
-                    Input.IsKeyDown(83) && Y < 750)
+            else if (Input.IsKeyDown(87) && Y > _upperLimit &&
+                    Input.IsKeyDown(83) && Y < _lowerLimit)
             { }
             //Left Right
-            else if (Input.IsKeyDown(65) && X > 10 &&
-                    Input.IsKeyDown(68) && X < 800)
+            else if (Input.IsKeyDown(65) && X > _leftLimit &&
+                    Input.IsKeyDown(68) && X < _rightLimit)
             { }
             //Up
-            else if (Input.IsKeyDown(87) && Y > 10)
+            else if (Input.IsKeyDown(87) && Y > _upperLimit)
             {
                 Y -= Speed * deltaTime;
             }
             //Down
-            else if (Input.IsKeyDown(83) && Y < 750)
+            else if (Input.IsKeyDown(83) && Y < _lowerLimit)
             {
                 Y += Speed * deltaTime;
             }
             //Left
-            else if (Input.IsKeyDown(65) && X > 10)
+            else if (Input.IsKeyDown(65) && X > _leftLimit)
             {
                 X -= Speed * deltaTime;
             }
             //Right
-            else if (Input.IsKeyDown(68) && X < 800)
+            else if (Input.IsKeyDown(68) && X < _rightLimit)
             {
                 X += Speed * deltaTime;
             }
@@ -248,12 +253,6 @@ namespace GraphicalTestApp
             {
                 RemoveChild(this);
             }
-        }
-
-        //Stat changing functions
-        public void CoinInc()
-        {
-            _coins++;
         }
 
         //###Damage and Iframes###
@@ -284,6 +283,7 @@ namespace GraphicalTestApp
         public void Die()
         {
             //Todo: Add animation
+            Y = -1500;
             _hp = 0;
             StatCount(0f);
             RemoveChild(_hitbox);

@@ -16,7 +16,7 @@ namespace GraphicalTestApp
         public float Speed { get; set; } = 140f;
 
         //Movement Bools for Phase III
-        private bool _moveleft = true;
+        private bool _moveLeft = true;
         private bool _MoveUp = true;
 
         //Phase tracker & Property
@@ -25,19 +25,9 @@ namespace GraphicalTestApp
         public int Phase { get { return _phase; } }
 
         //Variables used for attacks
-        private bool _invincible = false;
-        private int nextAttack = 0;
-        private bool _attacking = false;
         private bool _healing = false;
 
-        //Checks if a beam or such has fired.
-        private bool _usedAttack = false;
-
-        //Random class and timers
-        private Random rnd = new Random();
-        private Timer cutSceneTimer = new Timer();
-        public Timer attackTimer = new Timer();
-
+        private Timer _mainTimer = new Timer();
 
         //The Hitbox
         private AABB _hitbox;
@@ -83,30 +73,25 @@ namespace GraphicalTestApp
         private void StartUp()
         {
             Y = -20;
-            Y = 100;
-            BossFightController.CutScene = false;
+            BossFightController.CutScene = true;
         }
 
         //Keeps track of the bosses HP and tells it to heal if its not time to die.
         private void HealthBar(float deltaTime)
         {
-            if (!_invincible)
+            //X, Y, Width, Height, Color
+            RL.DrawRectangle(318, 5, 205, 14, Color.GRAY);
+            if (!_healing)
             {
-                //X, Y, Width, Height, Color
-                RL.DrawRectangle(318, 5, 205, 14, Color.GRAY);
-                if (!_healing)
-                {
-                    RL.DrawRectangle(320, 5, _hp, 10, Color.GREEN);
-                }
-                else if (_healing)
-                {
-                    RL.DrawRectangle(320, 5, _hp, 10, Color.RED);
-                }
-                if (_hp <= 10 && _phase < _maxPhase)
-                {
-                    _healing = true;
-                }
-
+                RL.DrawRectangle(320, 5, _hp, 10, Color.GREEN);
+            }
+            else if (_healing)
+            {
+                RL.DrawRectangle(320, 5, _hp, 10, Color.RED);
+            }
+            if (_hp <= 10 && _phase < _maxPhase)
+            {
+                _healing = true;
             }
         }
 
@@ -116,10 +101,10 @@ namespace GraphicalTestApp
             //If the boss is healing, it becomes invcible and regains HP
             if (_healing)
             {
-                if (_hp < 200 && cutSceneTimer.Seconds > 0.009f)
+                if (_hp < 200 && _mainTimer.Seconds > 0.009f)
                 {
                     _hp++;
-                    cutSceneTimer.Restart();
+                    _mainTimer.Restart();
                 }
                 //Tells the boss to stop healing
                 else if (_hp >= 200)
@@ -137,7 +122,7 @@ namespace GraphicalTestApp
             {
                 YVelocity = 20f * deltaTime;
             }
-            if (cutSceneTimer.Seconds >= 5.2)
+            if (_mainTimer.Seconds >= 5.5)
             {
                 YVelocity = 0f;
                 BossFightController.CutScene = false;
@@ -145,11 +130,11 @@ namespace GraphicalTestApp
             //During phase 6 the boss gains movement for that phase only
             if (_phase == 6)
             {
-                if (_moveleft)
+                if (_moveLeft)
                 {
                     MoveLeft(deltaTime);
                 }
-                else if (!_moveleft)
+                else if (!_moveLeft)
                 {
                     MoveRight(deltaTime);
                 }
@@ -216,7 +201,7 @@ namespace GraphicalTestApp
                 else
                 {
                     XVelocity = 0f;
-                    _moveleft = false;
+                    _moveLeft = false;
                 }
             }
         }
@@ -233,13 +218,10 @@ namespace GraphicalTestApp
             else
             {
                 XVelocity = 0f;
-                _moveleft = true;
+                _moveLeft = true;
             }
 
         }
-
-        //private void Touch()
-        //{ }
 
         //Function for taking damage
         public void TakeDamage()
@@ -250,6 +232,7 @@ namespace GraphicalTestApp
                 _hp--;
                 if (_hp <= 0)
                 {
+                    Y = -500;
                     RemoveChild(_hitbox);
                     Parent.RemoveChild(this);
                 }

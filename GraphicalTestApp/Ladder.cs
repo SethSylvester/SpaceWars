@@ -42,8 +42,6 @@ namespace GraphicalTestApp
         {
             _hitbox = new AABB(600, 943);
             AddChild(_hitbox);
-            Sprite sprite = new Sprite("GFX/Angry.png");
-            AddChild(sprite);
             OnUpdate += MoveDownVeryFast;
             OnUpdate += Touch2;
         }

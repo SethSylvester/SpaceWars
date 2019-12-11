@@ -37,14 +37,14 @@ namespace GraphicalTestApp
         private bool _attacking = false;
 
         //Byte to change between two different attacks
-        private byte attackNum = 1;
+        private byte _attackNum = 1;
 
         //The bosses sprite
-        Sprite enemyCenterSprite;
+        private Sprite _enemyCenterSprite;
 
         //The main enemy.
-        private Enemy enemyCenter;
-        private Spinner spinner;
+        private Enemy _enemyCenter;
+        private Spinner _spinner;
 
         //Timer class
         private Timer _attackTimer = new Timer();
@@ -58,21 +58,21 @@ namespace GraphicalTestApp
         public BossFightController(Actor root, byte startPhase)
         {
             _root = root;
-            enemyCenter = new Enemy(root, startPhase);
+            _enemyCenter = new Enemy(root, startPhase);
             OnUpdate += PhaseChecker;
         }
 
         //The startup function
         public void StartUp()
         {
-            _root.AddChild(enemyCenter);
+            _root.AddChild(_enemyCenter);
             //The boss's thicc sprite
-            enemyCenterSprite = new Sprite("GFX/Boss.png");
-            enemyCenter.AddChild(enemyCenterSprite);
-            enemyCenter.X = 400;
+            _enemyCenterSprite = new Sprite("GFX/Boss.png");
+            _enemyCenter.AddChild(_enemyCenterSprite);
+            _enemyCenter.X = 400;
 
             //Attaching things to this lets them orbit the boss
-            spinner = new Spinner();
+            _spinner = new Spinner();
         }
 
         //Checks the phase every frame to see if it is updated and needs to be changed
@@ -126,43 +126,43 @@ namespace GraphicalTestApp
         //These clear the previous stage
         private void PhaseOneClear()
         {
-            enemyCenter.RemoveChild(_phaseOne);
+            _enemyCenter.RemoveChild(_phaseOne);
         }
         private void PhaseTwoClear()
         {
-            enemyCenter.RemoveChild(_phaseTwo);
+            _enemyCenter.RemoveChild(_phaseTwo);
         }
 
         private void PhaseThreeClear()
         {
-            enemyCenter.RemoveChild(_phaseThree);
-            enemyCenter.RemoveChild(spinner);
+            _enemyCenter.RemoveChild(_phaseThree);
+            _enemyCenter.RemoveChild(_spinner);
 
             //Makes the enemy stop moving
             Enemy.Instance.XVelocity = 0;
             Enemy.Instance.YVelocity = 0;
 
             //recenters the enemy
-            enemyCenter.X = 400;
-            enemyCenter.Y = 100;
+            _enemyCenter.X = 400;
+            _enemyCenter.Y = 100;
         }
         private void PhaseFourClear()
         {
-            enemyCenter.RemoveChild(_phaseFour);
+            _enemyCenter.RemoveChild(_phaseFour);
         }
         private void PhaseFiveClear()
         {
-            enemyCenter.RemoveChild(_phaseFive);
+            _enemyCenter.RemoveChild(_phaseFive);
         }
         
         private void PhaseSixClear()
         {
-            enemyCenter.RemoveChild(_phaseSix);
-            enemyCenter.RemoveChild(enemyCenterSprite);
+            _enemyCenter.RemoveChild(_phaseSix);
+            _enemyCenter.RemoveChild(_enemyCenterSprite);
 
             //Makes the enemy stop moving
-            enemyCenter.XVelocity = 0f;
-            enemyCenter.YVelocity = 0f;
+            _enemyCenter.XVelocity = 0f;
+            _enemyCenter.YVelocity = 0f;
         }
 
         //###STARTS###
@@ -173,7 +173,7 @@ namespace GraphicalTestApp
 
             //Spawns the new phase
             _phaseOne = new Actor();
-            enemyCenter.AddChild(_phaseOne);
+            _enemyCenter.AddChild(_phaseOne);
 
             CurrentPhase = _phaseOne;
         }
@@ -189,7 +189,7 @@ namespace GraphicalTestApp
             _phaseTwo = new Actor();
             CurrentPhase = _phaseTwo;
 
-            enemyCenter.AddChild(_phaseTwo);
+            _enemyCenter.AddChild(_phaseTwo);
         }
         private void PhaseThreeStart()
         {
@@ -200,8 +200,8 @@ namespace GraphicalTestApp
 
             //Spawns the new phase
             _phaseThree = new Actor();
-            enemyCenter.AddChild(_phaseThree);
-            _phaseThree.AddChild(spinner);
+            _enemyCenter.AddChild(_phaseThree);
+            _phaseThree.AddChild(_spinner);
 
             CurrentPhase = _phaseThree;
         }
@@ -218,7 +218,7 @@ namespace GraphicalTestApp
             _phaseFour = new Actor();
             CurrentPhase = _phaseFour;
 
-            enemyCenter.AddChild(_phaseFour);
+            _enemyCenter.AddChild(_phaseFour);
         }
 
         private void PhaseFiveStart()
@@ -232,7 +232,7 @@ namespace GraphicalTestApp
             _phaseFive = new Actor();
             CurrentPhase = _phaseFive;
 
-            enemyCenter.AddChild(_phaseFive);
+            _enemyCenter.AddChild(_phaseFive);
             _attackTimer.Restart();
         }
 
@@ -246,10 +246,10 @@ namespace GraphicalTestApp
 
             //Clears the previous stage
             PhaseFiveClear();
-            spinner = new Spinner();
+            _spinner = new Spinner();
 
-            enemyCenter.AddChild(_phaseSix);
-            _phaseSix.AddChild(spinner);
+            _enemyCenter.AddChild(_phaseSix);
+            _phaseSix.AddChild(_spinner);
 
             CurrentPhase = _phaseSix;
         }
@@ -264,16 +264,16 @@ namespace GraphicalTestApp
             PhaseSixClear();
 
             //Re-centers the enemy after he bounced everywhere
-            enemyCenter.X = 400;
-            enemyCenter.Y = 200;
+            _enemyCenter.X = 400;
+            _enemyCenter.Y = 200;
 
             //Spawns the new phase
             _phaseSeven = new Actor();
-            enemyCenter.AddChild(_phaseSeven);
+            _enemyCenter.AddChild(_phaseSeven);
 
             //He accepts defeat and changes his sprite to a more fitting one.
-            enemyCenterSprite = new Sprite("GFX/BossEyeClosed.png");
-            enemyCenter.AddChild(enemyCenterSprite);
+            _enemyCenterSprite = new Sprite("GFX/BossEyeClosed.png");
+            _enemyCenter.AddChild(_enemyCenterSprite);
 
             CurrentPhase = _phaseSeven;
         }
@@ -317,7 +317,6 @@ namespace GraphicalTestApp
 
         private void PhaseTwo()
         {
-            Enemy.Instance.attackTimer.Restart();
             //Left Turrets
             SpawnWiggleGunTurret(-105, 0);
             SpawnWiggleGunTurret(-175, 0);
@@ -349,8 +348,8 @@ namespace GraphicalTestApp
 
         private void PhaseFour()
         {
-            spinner = new Spinner("fast");
-            CurrentPhase.AddChild(spinner);
+            _spinner = new Spinner("fast");
+            CurrentPhase.AddChild(_spinner);
             
             SpawnRotatingTurret(-105, 0);
             SpawnRotatingTurret(105, 0);
@@ -385,7 +384,17 @@ namespace GraphicalTestApp
         {
             Ladder hand = new Ladder(true);
             CurrentPhase.AddChild(hand);
+            Sprite handSprite = new Sprite("GFX/Angry.png");
+            hand.AddChild(handSprite);
             hand.Y = -1000;
+
+            //Foot.
+            Ladder jax = new Ladder(true);
+            CurrentPhase.AddChild(jax);
+            Sprite jaxSprite = new Sprite("GFX/Foot.jpg");
+            jax.AddChild(jaxSprite);
+            jax.Y = -5000;
+
         }
 
         //###SPAWNERS
@@ -393,7 +402,7 @@ namespace GraphicalTestApp
         {
             //Simple simple rotating turrets
             Turret turret3 = new Turret(_root, "reverse");
-            spinner.AddChild(turret3);
+            _spinner.AddChild(turret3);
             Sprite turret3Sprite = new Sprite("GFX/Tanks/tankGreen.png");
             turret3.AddChild(turret3Sprite);
         }
@@ -401,7 +410,7 @@ namespace GraphicalTestApp
         {
             //Simple simple rotating turrets
             Turret turret3 = new Turret(_root, "reverse2");
-            spinner.AddChild(turret3);
+            _spinner.AddChild(turret3);
         }
 
         //The gunship platforms for phase 1
@@ -495,7 +504,7 @@ namespace GraphicalTestApp
         {
             //Simple simple rotating turrets
             Turret turret3 = new Turret(_root, "rotate");
-            spinner.AddChild(turret3);
+            _spinner.AddChild(turret3);
             Sprite turret3Sprite = new Sprite("GFX/Tanks/tankGreen.png");
             turret3.AddChild(turret3Sprite);
             turret3.X = tX;
@@ -505,7 +514,7 @@ namespace GraphicalTestApp
         //Spawns a gun that fires in 360 degrees whose bullets eventualy return to it
         private void SpawnRotationGun(float x, float y)
         {
-            spinner = new Spinner(x, y, 50, "fast");
+            _spinner = new Spinner(x, y, 50, "fast");
             Projectile proj = new Projectile();
             Projectile proj1 = new Projectile();
             Projectile proj2 = new Projectile();
@@ -513,14 +522,14 @@ namespace GraphicalTestApp
             Projectile proj4 = new Projectile();
             Projectile proj5 = new Projectile();
 
-            CurrentPhase.AddChild(spinner);
+            CurrentPhase.AddChild(_spinner);
 
-            spinner.AddChild(proj);
-            spinner.AddChild(proj1);
-            spinner.AddChild(proj2);
-            spinner.AddChild(proj3);
-            spinner.AddChild(proj4);
-            spinner.AddChild(proj5);
+            _spinner.AddChild(proj);
+            _spinner.AddChild(proj1);
+            _spinner.AddChild(proj2);
+            _spinner.AddChild(proj3);
+            _spinner.AddChild(proj4);
+            _spinner.AddChild(proj5);
 
             Sprite projectileSprite = new Sprite("GFX/Coin.png");
             Sprite projectileSprite3 = new Sprite("GFX/Coin.png");
@@ -554,7 +563,7 @@ namespace GraphicalTestApp
             if (!_attacking && _attackTimer.Seconds <= 0.6f ||
                 !_attacking && _attackTimer.Seconds >= 1 && _attackTimer.Seconds <= 1.6f)
             {
-                if (attackNum == 1)
+                if (_attackNum == 1)
                 {
                     for (int i = 0; i < 800; i += 100)
                     {
@@ -572,9 +581,10 @@ namespace GraphicalTestApp
                     }
                 }
             }
+
             else if (_attackTimer.Seconds >= 1.7 && !_attacking)
             {
-                switch (attackNum)
+                switch (_attackNum)
                 {
                     case 1:
                         _attacking = true;
@@ -592,7 +602,7 @@ namespace GraphicalTestApp
         private void BeamAttack1()
         {
             _attackTimer.Restart();
-            attackNum++;
+            _attackNum++;
             for (int i = 0; i < 800; i += 100)
             {
                 Ladder lad = new Ladder(50, 400);
@@ -604,7 +614,7 @@ namespace GraphicalTestApp
         private void BeamAttack2()
         {
             _attackTimer.Restart();
-            attackNum--;
+            _attackNum--;
             for (int i = 50; i < 800; i += 100)
             {
                 Ladder lad = new Ladder(50, 400);

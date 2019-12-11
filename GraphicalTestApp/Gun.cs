@@ -71,7 +71,7 @@ namespace GraphicalTestApp
             {
                 Projectile projectile = new Projectile(false, "rocket");
                 _root.AddChild(projectile);
-                Sprite projectileSprite = new Sprite("GFX/Coin.png");
+                Sprite projectileSprite = new Sprite("GFX/rocket.png");
                 projectile.AddChild(projectileSprite);
                 projectile.X = x + 100;
                 projectile.Y = y;

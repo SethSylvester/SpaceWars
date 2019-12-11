@@ -8,7 +8,7 @@ using RL = Raylib.Raylib;
 
 namespace GraphicalTestApp
 {
-    class Interface : Entity
+    class Interface : Actor
     {
         //The interfaces numbers that it updates
         private int _hp = 0;
@@ -33,7 +33,13 @@ namespace GraphicalTestApp
                 RL.DrawText(Convert.ToString("HP: " + _hp), 1000, 155, 25, Color.WHITE);
             }
 
-            RL.DrawRectangleLines(810, 0, 1, 1200, Raylib.Color.WHITE);
+            //Draws the boundries
+            //PosX, PosY, Width, Height, Color
+            //Upper boundry
+            RL.DrawRectangleLines(0, 172, 810, 0, Color.WHITE);
+
+            //Right boundry
+            RL.DrawRectangleLines(810, 0, 1, 1200, Color.WHITE);
 
             if (Enemy.Instance.HP <= 0)
             {

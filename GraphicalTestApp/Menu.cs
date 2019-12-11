@@ -12,6 +12,8 @@ namespace GraphicalTestApp
     {
         //The sprite displayer for the customization menu
         private Sprite _spriteDisplay;
+        //The cursor
+        private Cursor _cursor;
 
         //The byte to determine which section of the menu you're selecting
         private byte _choice;
@@ -28,8 +30,8 @@ namespace GraphicalTestApp
         private byte _selectedSkinNum = 0;
         private string[] _skins = new string[4];
 
-        //The cursor
-        Cursor cursor;
+        //Displays the menus text
+        private string[] _menuText = new string[13];
 
         public Menu()
         {
@@ -43,243 +45,278 @@ namespace GraphicalTestApp
             _spriteDisplay = new Sprite(_skins[0]);
 
             //Spawns the cursor
-            cursor = new Cursor();
-            cursor.maxPos = 5;
-            cursor.X = 425;
-            cursor.Y = 260;
-            AddChild(cursor);
+            _cursor = new Cursor();
+            _cursor.maxPos = 5;
+            _cursor.X = 425;
+            _cursor.Y = 260;
+            AddChild(_cursor);
 
             //OnUpdate that draws the menu and checks to see if you selected anything
+            TextInitalizer();
             OnUpdate += Selected;
             OnDraw += MenuDraw;
+        }
+
+        private void TextInitalizer()
+        {
+            //Title
+            _menuText[0] = "Space Defender";
+            //Main Menu
+            _menuText[1] = "Start";
+            _menuText[2] = "Select Stage";
+            _menuText[3] = "Customize";
+            _menuText[4] = "Weenie Mode";
+            //Stage Selecter
+            _menuText[5] = "Select Stage";
+            _menuText[6] = "Next Stage";
+            _menuText[7] = "Previous Stage";
+
+            //Customization Menu
+            _menuText[8] = "Select Skin";
+            _menuText[9] = "Next Skin";
+            _menuText[10] = "Previous Skin";
+
+            //Exit & Back
+            _menuText[11] = "Back";
+            _menuText[12] = "Exit";
         }
 
         private void Selected(float deltaTime)
         {
             //###MAIN MENU FUNCTIONS###
-            //Starts the game
-            if (_mainMenu && cursor.selected == true && cursor.Pos == 1)
+            if (_mainMenu)
             {
-                StartGame();
-            }
-            //Brings up the stage selector
-            else if (_mainMenu && cursor.selected == true && cursor.Pos == 2)
-            {
-                _mainMenu = false;
-                _stageSelect = true;
-                cursor.maxPos = 3;
-                cursor.Pos = 1;
-                cursor.Y = 260;
-            }
-            //Brings up the skin selector
-            else if (_mainMenu && cursor.selected == true && cursor.Pos == 3)
-            {
-                AddChild(_spriteDisplay);
-                _spriteDisplay.X = 500;
-                _spriteDisplay.Y = 200;
+                //Starts the game
+                if (_cursor.selected && _cursor.pos == 1)
+                {
+                    StartGame();
+                }
+                //Brings up the stage selector
+                else if (_cursor.selected && _cursor.pos == 2)
+                {
+                    _mainMenu = false;
+                    _stageSelect = true;
+                    _cursor.maxPos = 3;
+                    _cursor.pos = 1;
+                    _cursor.Y = 260;
+                }
+                //Brings up the skin selector
+                else if (_cursor.selected && _cursor.pos == 3)
+                {
+                    AddChild(_spriteDisplay);
+                    _spriteDisplay.X = 500;
+                    _spriteDisplay.Y = 200;
 
-                _mainMenu = false;
-                _customizeMenu = true;
-                cursor.maxPos = 3;
-                cursor.Pos = 1;
-                cursor.Y = 260;
+                    _mainMenu = false;
+                    _customizeMenu = true;
+                    _cursor.maxPos = 3;
+                    _cursor.pos = 1;
+                    _cursor.Y = 260;
+                }
+                //Turns on Weenie mode
+                else if (_cursor.selected && _cursor.pos == 4 &&
+                    !_weenieMode)
+                {
+                    _weenieMode = true;
+                }
+                //Turns off weenie mode
+                else if (_cursor.selected && _cursor.pos == 4 &&
+                    _weenieMode)
+                {
+                    _weenieMode = false;
+                }
+                //Closes the game
+                else if (_cursor.selected && _cursor.pos == 5)
+                {
+                    Game.Exit = true;
+                }
             }
-            //Turns on Weenie mode
-            else if (_mainMenu && cursor.selected == true && cursor.Pos == 4 &&
-                !_weenieMode)
-            {
-                _weenieMode = true;
-            }
-            //Turns off weenie mode
-            else if (_mainMenu && cursor.selected == true && cursor.Pos == 4 &&
-                _weenieMode)
-            {
-                _weenieMode = false;
-            }
-            //Closes the game
-            else if (_mainMenu && cursor.selected == true && cursor.Pos == 5)
-            {
-                Game.Exit = true;
-            }
+
             //###STAGE SELECTOR MENU###
-            //Ensures the starting stage cannot be over six
-            else if (_stageSelect && cursor.selected == true && cursor.Pos == 1 &&
-                _startingStage < 6)
+            else if (_stageSelect)
             {
-                _startingStage++;
-            }
+                //Ensures the starting stage cannot be over six
+                if (_cursor.selected && _cursor.pos == 1 &&
+                    _startingStage < 6)
+                {
+                    _startingStage++;
+                }
 
-            //Ensures the starting stage cannot be below 1
-            else if (_stageSelect && cursor.selected == true && cursor.Pos == 2 &&
-                _startingStage > 1)
-            {
-                _startingStage--;
-            }
+                //Ensures the starting stage cannot be below 1
+                else if (_cursor.selected && _cursor.pos == 2 &&
+                    _startingStage > 1)
+                {
+                    _startingStage--;
+                }
 
-            //Exits out of the stage selector
-            else if (_stageSelect && cursor.selected == true && cursor.Pos == 3)
-            {
-                _stageSelect = false;
-                _mainMenu = true;
-                cursor.maxPos = 5;
-                cursor.Pos = 1;
-                cursor.Y = 260;
+                //Exits out of the stage selector
+                else if (_cursor.selected && _cursor.pos == 3)
+                {
+                    _stageSelect = false;
+                    _mainMenu = true;
+                    _cursor.maxPos = 5;
+                    _cursor.pos = 1;
+                    _cursor.Y = 260;
+                }
             }
 
             //###SKIN SELECTION MENU###
+            else if (_customizeMenu)
+            {
             //Selects the next skin
-            else if (_customizeMenu && cursor.selected == true && cursor.Pos == 1 &&
+            if (_cursor.selected && _cursor.pos == 1 &&
                 _selectedSkinNum < _skins.Length - 1)
-            {
-                RemoveChild(_spriteDisplay);
+                {
+                    RemoveChild(_spriteDisplay);
 
-                _selectedSkinNum++;
-                _spriteDisplay = new Sprite(_skins[_selectedSkinNum]);
-                AddChild(_spriteDisplay);
-                _spriteDisplay.X = 500;
-                _spriteDisplay.Y = 200;
-            }
-            //Selects the previous skin
-            else if (_customizeMenu && cursor.selected == true && cursor.Pos == 2 &&
-                _selectedSkinNum > 0)
-            {
-                RemoveChild(_spriteDisplay);
+                    _selectedSkinNum++;
+                    _spriteDisplay = new Sprite(_skins[_selectedSkinNum]);
+                    AddChild(_spriteDisplay);
+                    _spriteDisplay.X = 500;
+                    _spriteDisplay.Y = 200;
+                }
+                //Selects the previous skin
+                else if (_cursor.selected && _cursor.pos == 2 &&
+                    _selectedSkinNum > 0)
+                {
+                    RemoveChild(_spriteDisplay);
 
-                _selectedSkinNum--;
-                _spriteDisplay = new Sprite(_skins[_selectedSkinNum]);
-                AddChild(_spriteDisplay);
-                _spriteDisplay.X = 500;
-                _spriteDisplay.Y = 200;
-            }
-            //Exits the skin selection menu
-            else if (_customizeMenu && cursor.selected == true && cursor.Pos == 3)
-            {
-                RemoveChild(_spriteDisplay);
+                    _selectedSkinNum--;
+                    _spriteDisplay = new Sprite(_skins[_selectedSkinNum]);
+                    AddChild(_spriteDisplay);
+                    _spriteDisplay.X = 500;
+                    _spriteDisplay.Y = 200;
+                }
+                //Exits the skin selection menu
+                else if (_cursor.selected && _cursor.pos == 3)
+                {
+                    RemoveChild(_spriteDisplay);
 
-                _stageSelect = false;
-                _mainMenu = true;
-                cursor.maxPos = 5;
-                cursor.Pos = 1;
-                cursor.Y = 260;
+                    _customizeMenu = false;
+                    _mainMenu = true;
+                    _cursor.maxPos = 5;
+                    _cursor.pos = 1;
+                    _cursor.Y = 260;
+                }
             }
             //Tells the cursor to stop selecting something after a press
-            cursor.selected = false;
+            _cursor.selected = false;
         }
 
         //Draws the menu and writes out the text
         private void MenuDraw()
         {
             //Gets the current text
-            _choice = cursor.Pos;
+            _choice = _cursor.pos;
             //Text, PosX, PosY, Size, Color
             //Draws the main menus options
             if (_mainMenu)
             {
-                RL.DrawText(Convert.ToString("Space Defender"), 275, 150, 75, Color.WHITE);
+                RL.DrawText(Convert.ToString(_menuText[0]), 275, 150, 75, Color.WHITE);
                 if (_choice == 1)
                 {
-                    RL.DrawText(Convert.ToString("Start"), 450, 250, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[1]), 450, 250, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Start"), 450, 250, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[1]), 450, 250, 25, Color.WHITE);
                 }
                 if (_choice == 2)
                 {
-                    RL.DrawText(Convert.ToString("Select Stage"), 450, 283, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[2]), 450, 283, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Select Stage"), 450, 283, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[2]), 450, 283, 25, Color.WHITE);
                 }
                 if (_choice == 3)
                 {
-                    RL.DrawText(Convert.ToString("Customize"), 450, 315, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[3]), 450, 315, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Customize"), 450, 315, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[3]), 450, 315, 25, Color.WHITE);
                 }
                 if (_weenieMode)
                 {
-                    RL.DrawText(Convert.ToString("Weenie Mode"), 450, 345, 25, Color.PINK);
+                    RL.DrawText(Convert.ToString(_menuText[4]), 450, 345, 25, Color.PINK);
                 }
                 else if (_choice == 4)
                 {
-                    RL.DrawText(Convert.ToString("Weenie Mode"), 450, 345, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[4]), 450, 345, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Weenie Mode"), 450, 345, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[4]), 450, 345, 25, Color.WHITE);
                 }
                 if (_choice == 5)
                 {
-                    RL.DrawText(Convert.ToString("Exit"), 450, 375, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[12]), 450, 375, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Exit"), 450, 375, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[12]), 450, 375, 25, Color.WHITE);
                 }
             }
 
             //The menu for selecting a stage
             else if (_stageSelect)
             {
-                RL.DrawText(Convert.ToString("Select Stage"), 450, 150, 25, Color.WHITE);
+                RL.DrawText(Convert.ToString(_menuText[5]), 450, 150, 25, Color.WHITE);
                 RL.DrawText(Convert.ToString(_startingStage), 520, 190, 50, Color.WHITE);
                 if (_choice == 1)
                 {
-                    RL.DrawText(Convert.ToString("Next Stage"), 450, 250, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[6]), 450, 250, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Next Stage"), 450, 250, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[6]), 450, 250, 25, Color.WHITE);
                 }
                 if (_choice == 2)
                 {
-                    RL.DrawText(Convert.ToString("Previous Stage"), 450, 283, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[7]), 450, 283, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Previous Stage"), 450, 283, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[7]), 450, 283, 25, Color.WHITE);
                 }
                 if (_choice == 3)
                 {
-                    RL.DrawText(Convert.ToString("Back"), 450, 315, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[11]), 450, 315, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Back"), 450, 315, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[11]), 450, 315, 25, Color.WHITE);
                 }
             }
 
             //The menu for the skin customization
             else if (_customizeMenu)
             {
-                RL.DrawText(Convert.ToString("Select Skin"), 450, 150, 25, Color.WHITE);
+                RL.DrawText(Convert.ToString(_menuText[8]), 450, 150, 25, Color.WHITE);
                 if (_choice == 1)
                 {
-                    RL.DrawText(Convert.ToString("Next Skin"), 450, 250, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[9]), 450, 250, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Next Skin"), 450, 250, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[9]), 450, 250, 25, Color.WHITE);
                 }
                 if (_choice == 2)
                 {
-                    RL.DrawText(Convert.ToString("Previous Skin"), 450, 283, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[10]), 450, 283, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Previous Skin"), 450, 283, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[10]), 450, 283, 25, Color.WHITE);
                 }
                 if (_choice == 3)
                 {
-                    RL.DrawText(Convert.ToString("Back"), 450, 315, 25, Color.BLUE);
+                    RL.DrawText(Convert.ToString(_menuText[11]), 450, 315, 25, Color.BLUE);
                 }
                 else
                 {
-                    RL.DrawText(Convert.ToString("Back"), 450, 315, 25, Color.WHITE);
+                    RL.DrawText(Convert.ToString(_menuText[11]), 450, 315, 25, Color.WHITE);
                 }
             }
         }
@@ -303,8 +340,8 @@ namespace GraphicalTestApp
             Parent.AddChild(_player);
 
             //Places the player
-            _player.X = 100;
-            _player.Y = 500;
+            _player.X = 390f;
+            _player.Y = 500f;
 
             level.StartUp();
 

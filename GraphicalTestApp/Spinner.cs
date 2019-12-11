@@ -8,9 +8,10 @@ namespace GraphicalTestApp
 {
     class Spinner : Entity
     {
+        //How fast the spinner moves
+        private float _speed;
 
-        float _speed;
-
+        //The spinner class who's sole purpose is to spin
         public Spinner()
         {
             OnUpdate += Orbit;

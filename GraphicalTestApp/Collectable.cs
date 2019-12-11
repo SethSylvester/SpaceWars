@@ -11,10 +11,10 @@ namespace GraphicalTestApp
         private AABB _hitbox;
         private string _type;
 
-        Sprite _sprite;
+        private Sprite _sprite;
 
         //Timer used for timing the effects
-        Timer timer = new Timer();
+        private Timer _timer = new Timer();
 
         //Constructor
         public Collectable(float x, float y, string type, string sprite)
@@ -48,7 +48,7 @@ namespace GraphicalTestApp
                 _hitbox = null;
                 RemoveChild(_sprite);
 
-                timer.Restart();
+                _timer.Restart();
             }
 
         }
@@ -65,7 +65,7 @@ namespace GraphicalTestApp
 
             }
 
-            if (_hitbox == null && timer.Seconds >= 3)
+            if (_hitbox == null && _timer.Seconds >= 3)
             {
                 Player.Instance.shootSpeed = 0.1f;
                 Parent.RemoveChild(this);

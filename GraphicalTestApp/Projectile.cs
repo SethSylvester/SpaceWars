@@ -14,15 +14,15 @@ namespace GraphicalTestApp
         private Timer _timer = new Timer();
 
         //###General Projectile stuff###
-        //1 = north, 2 = south
-        private int _direction = 2;
-
         //Rotation float.
         public float Rotation = 0;
 
         //Projectile speed
         private float _speed = 150f;
         public float Speed { get { return _speed; } }
+
+        //Accelerator for the rocket
+        private float YAccelerate = 0.35f;
 
         //Determines if the projectile is friendly, so the player can't own themselves
         private bool _friendly = false;
@@ -33,7 +33,7 @@ namespace GraphicalTestApp
         {
             //Gives the projectile a hitbox
             AddChild(Hitbox = new AABB(16, 16));
-            OnUpdate += TouchPlayer;
+            OnUpdate += TouchDetection;
         }
 
         //Basic projectile, moves downwards
@@ -88,30 +88,31 @@ namespace GraphicalTestApp
             {
                 //Checks to see if the projectile is friendly and thus will not damage the player
                 OnUpdate += MoveReverse;
-                OnUpdate += TouchOrigin;
+                OnUpdate += DeletionTimer;
             }
             else if (type == "reverseUp")
             {
                 //Checks to see if the projectile is friendly and thus will not damage the player
                 OnUpdate += MoveReverseUp;
-                OnUpdate += TouchOrigin;
+                OnUpdate += DeletionTimer;
             }
             else if (type == "reverseRight")
             {
                 //Checks to see if the projectile is friendly and thus will not damage the player
                 OnUpdate += MoveReverseRight;
-                OnUpdate += TouchOrigin;
+                OnUpdate += DeletionTimer;
             }
             else if (type == "reverseLeft")
             {
                 //Checks to see if the projectile is friendly and thus will not damage the player
                 OnUpdate += MoveReverseLeft;
-                OnUpdate += TouchOrigin;
+                OnUpdate += DeletionTimer;
             }
 
         }
 
-        private void TouchPlayer(float deltaTime)
+        //The function that checks if the projectile is touching either an enemy or the player
+        private void TouchDetection(float deltaTime)
         {
             if (Hitbox == null)
             {
@@ -139,21 +140,8 @@ namespace GraphicalTestApp
             }
         }
 
-        private void TouchPlayerBeam(float deltaTime)
-        {
-            if (Hitbox == null)
-            {
-                return;
-            }
-
-            if (Hitbox.DetectCollision(Player.Instance.HitBox))
-            {
-                Player.Instance.TakeDamage();
-            }
-
-        }
-
-        private void TouchOrigin(float deltaTime)
+        //Deletes the bullet after an amount of time
+        private void DeletionTimer(float deltaTime)
         {
 
             if (_timer.Seconds >= 2.8f)
@@ -163,12 +151,11 @@ namespace GraphicalTestApp
 
         }
 
-
         //###Movement Directions###
         private void RocketDown(float deltaTime)
         {
-            YAcceleration = 1f;
-            YVelocity = (+_speed + YAcceleration)  * deltaTime;
+            //Tells the Rocket to speed up
+            YVelocity = YVelocity + YAccelerate * deltaTime;
             XVelocity = Rotation * deltaTime;
 
             if (Y < 0 || Y > 750 || X <= 0 || X >= 800)
@@ -177,6 +164,7 @@ namespace GraphicalTestApp
             }
         }
 
+        //Fires the projectile up
         private void MoveUp(float deltaTime)
         {
             YVelocity = -_speed * deltaTime;
@@ -189,6 +177,8 @@ namespace GraphicalTestApp
 
         }
 
+        //Fires the projectile downwards
+
         private void MoveDown(float deltaTime)
         {
             YVelocity = +_speed * deltaTime;
@@ -200,6 +190,8 @@ namespace GraphicalTestApp
                 Parent.RemoveChild(this);
             }
         }
+
+        //Fires the projectile downwards and then upwards
 
         private void MoveReverse(float deltaTime)
         {
@@ -219,6 +211,9 @@ namespace GraphicalTestApp
                 Parent.RemoveChild(this);
             }
         }
+
+        //Fires the projectile upwards and then downwards
+
         private void MoveReverseUp(float deltaTime)
         {
             bool reversed = false;
@@ -277,13 +272,16 @@ namespace GraphicalTestApp
                 Parent.RemoveChild(this);
             }
         }
-        
+
+        //Fires the projectile to the left
+
         private void MoveLeft(float deltaTime)
         {
             XVelocity = -_speed * deltaTime;
             YVelocity = Rotation * deltaTime;
         }
 
+        //Fires the projectile to the right
         private void MoveRight(float deltaTime)
         {
             XVelocity = +_speed * deltaTime;

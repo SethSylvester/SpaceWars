@@ -8,7 +8,8 @@ namespace GraphicalTestApp
 {
     class Cursor : Entity
     {
-        public byte Pos = 1;
+        public byte pos = 1;
+        //The cursors maximum Position, to be set by the menu
         public byte maxPos = 1;
         private bool _called = false;
         //An unfortunate workaround because OnUpdate is called twice for some reason.
@@ -53,10 +54,10 @@ namespace GraphicalTestApp
         //Teleports up, loops when needed
         private void MenuUp()
         {
-            switch (Pos)
+            switch (pos)
             {
                 case 1:
-                    Pos = maxPos;
+                    pos = maxPos;
                     if (maxPos == 5)
                     {
                         Y = 388;
@@ -67,22 +68,22 @@ namespace GraphicalTestApp
                     }
                     break;
                 case 2:
-                    Pos--;
+                    pos--;
                     Y = 260;
                     break;
 
                 case 3:
-                    Pos--;
+                    pos--;
                     Y = 300;
                     break;
 
                 case 4:
-                    Pos--;
+                    pos--;
                     Y = 325;
                     break;
 
                 case 5:
-                    Pos--;
+                    pos--;
                     Y = 355;
                     break;
 
@@ -92,34 +93,34 @@ namespace GraphicalTestApp
         //Teleports down, loops when needed
         private void MenuDown()
         {
-            if (Pos == 1 && maxPos != 1)
+            if (pos == 1 && maxPos != 1)
             {
-                Pos++;
+                pos++;
                 Y = 300;
             }
-            else if (Pos == 2 && maxPos != 2)
+            else if (pos == 2 && maxPos != 2)
             {
-                Pos++;
+                pos++;
                 Y = 325;
             }
-            else if (Pos == 3 && maxPos != 3)
+            else if (pos == 3 && maxPos != 3)
             {
-                Pos++;
+                pos++;
                 Y = 355;
             }
-            else if (Pos == 4 && maxPos != 4)
+            else if (pos == 4 && maxPos != 4)
             {
-                Pos++;
+                pos++;
                 Y = 388;
             }
-            else if (Pos == 5 && maxPos != 5)
+            else if (pos == 5 && maxPos != 5)
             {
-                Pos = 1;
+                pos = 1;
                 Y = 260;
             }
             else
             {
-                Pos = 1;
+                pos = 1;
                 Y = 260;
             }
         }
