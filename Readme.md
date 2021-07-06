@@ -12,7 +12,5 @@ All input is done through the keyboard.
 * S - Moving Downwards and downwards in the menu.
 * A - Moving Left
 * D - Moving Right
-
-Spacebar - Firing the players gun
-
-E - Used for selection on the menu
+* Spacebar - Firing the players gun
+* E - Used for selection on the menu
