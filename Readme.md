@@ -14,3 +14,8 @@ All input is done through the keyboard.
 * D - Moving Right
 * Spacebar - Firing the players gun
 * E - Used for selection on the menu
+
+## Technical Information
+The Game was made entirely singlehandedly using raylib, no artists were assigned on the project however modified assets of tanks were provided and used. All animations are programmed in. This game was made for a student project requiring demonstration of a graphical test application that could run in a window.
+
+Credit to Kenney.nl for the tank assets that were modified.
