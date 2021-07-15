@@ -60,7 +60,7 @@ namespace GraphicalTestApp
         private void TextInitalizer()
         {
             //Title
-            _menuText[0] = "Space Defender";
+            _menuText[0] = "SpaceWars";
             //Main Menu
             _menuText[1] = "Start";
             _menuText[2] = "Select Stage";

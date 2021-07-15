@@ -10,7 +10,7 @@ namespace GraphicalTestApp
     {
         static void Main(string[] args)
         {
-            Game game = new Game(1280, 760, "Graphical Test Application");
+            Game game = new Game(1280, 760, "SpaceWars");
 
             Actor root = new Actor();
             game.Root = root;
