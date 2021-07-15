@@ -2,9 +2,9 @@
 The earth is under invasion, it is up to you to prevent tyranny from being ruled 
 by a very angry space Eyeball who only fights in the form of bullet hells.
 
-<img src="https://camo.githubusercontent.com/46c105dfdc33af10095958cc34504ac23886989583df45f3120bf69443dad51d/68747470733a2f2f692e696d6775722e636f6d2f51677765676a502e706e67" alt="Image" data-canonical-src="https://i.imgur.com/QgwegjP.png" style="max-width:50%;">
+<img src="https://raw.githubusercontent.com/SethSylvester/SpaceWars/master/Screenie1.png" alt="Image" data-canonical-src="https://raw.githubusercontent.com/SethSylvester/SpaceWars/master/Screenie1.png" style="max-width:50%;">
 
-<img src="https://i.imgur.com/x5oIOWR.png" alt="Image" data-canonical-src="https://i.imgur.com/QgwegjP.png" style="max-width:50%;">
+<img src="https://raw.githubusercontent.com/SethSylvester/SpaceWars/master/Screenie2.png" alt="Image" data-canonical-src="https://raw.githubusercontent.com/SethSylvester/SpaceWars/master/Screenie2.png" style="max-width:50%;">
 
 ## How to Open:
 1. Download from the releases tab
