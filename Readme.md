@@ -3,7 +3,9 @@ The earth is under invasion, it is up to you to prevent tyranny from being ruled
 by a very angry space Eyeball who only fights in the form of bullet hells.
 
 ## How to Open:
-Double click on the executable (the.exe).
+1. Download from the releases tab
+2. Extract all files
+3. Double click on the executable (the.exe).
 
 ## Controls:
 All input is done through the keyboard.
