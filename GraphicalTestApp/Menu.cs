@@ -36,10 +36,10 @@ namespace GraphicalTestApp
         public Menu()
         {
             //The four skins you're allowed to pick from
-            _skins[0] = "GFX/Toga.png";
-            _skins[1] = "GFX/Carter.png";
-            _skins[2] = "GFX/Jax.png";
-            _skins[3] = "GFX/Hunter.png";
+            _skins[0] = "GFX/StarShip1.png";
+            _skins[1] = "GFX/StarShip2.png";
+            _skins[2] = "GFX/StarShip3.png";
+            _skins[3] = "GFX/StarShip4.png";
 
             //loads in the default skin
             _spriteDisplay = new Sprite(_skins[0]);
@@ -65,7 +65,7 @@ namespace GraphicalTestApp
             _menuText[1] = "Start";
             _menuText[2] = "Select Stage";
             _menuText[3] = "Customize";
-            _menuText[4] = "Weenie Mode";
+            _menuText[4] = "Infinite HP";
             //Stage Selecter
             _menuText[5] = "Select Stage";
             _menuText[6] = "Next Stage";
