@@ -345,7 +345,7 @@ namespace GraphicalTestApp
 
             level.StartUp();
 
-            Collectable collect = new Collectable(100, 400, "shootSpeed", "GFX/Hunter.png");
+            Collectable collect = new Collectable(100, 400, "shootSpeed", "GFX/Powerup.png");
             Parent.AddChild(collect);
 
             //The menu deletes itself after starting the game to not hog space.

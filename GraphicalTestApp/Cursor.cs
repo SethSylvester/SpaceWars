@@ -18,7 +18,7 @@ namespace GraphicalTestApp
         //Constructor
         public Cursor()
         {
-            Sprite sprite = new Sprite("GFX/Carter.png");
+            Sprite sprite = new Sprite("GFX/Cursor.png");
             AddChild(sprite);
             //binds moveright to the WSAD.
             OnUpdate += Controls;
